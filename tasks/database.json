@@ -1,0 +1,12 @@
+//This is structure of database
+
+// User
+[
+    {
+        "_id" : "",
+        "username" : "",
+        "hashedPwd" : ""
+    }
+]
+
+// Recipe
