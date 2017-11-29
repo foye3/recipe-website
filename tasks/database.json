@@ -1,12 +1,47 @@
 //This is structure of database
-
-// User
 [
+    // user collection
     {
-        "_id" : "",
-        "username" : "",
-        "hashedPwd" : ""
+        "_id": "uuid",
+        "user_name": "email",
+        "nick_name": "nickname",
+        "hashed_pwd": "bcrypt 16",
+        "fllowed_recipe": [
+            {
+                "recipe_id": ""
+            }
+        ]
+    },
+    // recipe collection
+    {
+        "_id": "uuid",
+        "cerater_id":"user_id",
+        "tittle": "tittle",
+        "ingredients": [
+            {
+                "ingredient": "",
+                "amonut": ""
+            }
+        ],
+        "steps": [
+            {
+                "step": "stepnumber",
+                "content": "content",
+                "imageUrl": "imageUrl"  //not necessary
+            }
+        ],
+        "comments": [
+            {
+                "_id": "",
+                "userId": "",
+                "content": ""
+            }
+        ],
+        "rating": [
+            {
+                "userId": "",
+                "score": ""
+            }
+        ]
     }
 ]
-
-// Recipe
