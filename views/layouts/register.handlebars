@@ -1,0 +1,22 @@
+{{#if message }}
+<div class="alert alert-danger" role="alert">
+    {{message }}
+</div>
+{{/if}}
+<form action="/register" method="post">
+    <div>
+        <label>Username:</label>
+        <input type="text" name="username" />
+    </div>
+    <div>
+        <label>Nickname:</label>
+        <input type="text" name="nickname" />
+    </div>
+    <div>
+        <label>Password:</label>
+        <input type="password" name="password" />
+    </div>
+    <div>
+        <input type="submit" value="register" />
+    </div>
+</form>

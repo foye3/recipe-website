@@ -11,7 +11,7 @@ users:
     "user_name": "email",
     "nick_name": "nickname",
     "hashed_pwd": "bcrypt 16",
-    "followed_recipe": [
+    "followed_recipes": [
         {
             "recipe_id": ""
         }
@@ -19,21 +19,35 @@ users:
 }
 */
 module.exports = {
-    async findUserById(id) {
+    async getUserById(id) {
         if (!id)
-            throw "Must provide an id";
+            throw "Must provide user id";
         const usersCollection = await users();
         const user = usersCollection.findOne({ _id: id });
         if (!user)
             throw `user not found with id: ${id}`;
         return user;
     },
+    
+    // find user by username
+    // return ture or false if find user or not
+    async isUserExist(username){
+        if(!username){
+            
+        }
+    },
 
-    // async findUserByName(username) {
+    async getUserByName(username) {
+        if (!username)
+            throw "Must provide username";
+        const usersCollection = await users();
+        const user = usersCollection.findOne({ user_name: username });
+        if (!user)
+            throw "user not found";
+        return user;
+    },
 
-    // },
-
-    async addUser(username,nickname,hashedPwd) {
+    async addUser(username, nickname, hashedPwd) {
         if (typeof nickname !== "string") throw "No nickname";
         if (typeof username !== "string") throw "No username";
         if (!hashedPwd) throw "No hashed password";
@@ -43,9 +57,10 @@ module.exports = {
                 _id: uuid.v4(),
                 user_name: username,
                 nick_name: nickname,
-                hashed_pwd :hashedPwd,
-                followed_recipe: []
+                hashed_pwd: hashedPwd,
+                followed_recipes: []
             };
+            console.log(newUser._id);
 
             const newInsertInformation = await userCollection.insertOne(newUser);
             const newId = newInsertInformation.insertedId;
@@ -56,6 +71,7 @@ module.exports = {
         }
     },
 
+    // update nickname or password
     async updateUser(id, updatedUser) {
         const userCollection = await users();
         const updatedUserData = {};
@@ -65,16 +81,7 @@ module.exports = {
         if (updatedUser.hashedPwd) {
             updatedUserData.hashed_pwd = updatedUser.hashedPwd;
         }
-        //here
-        if (updatedUser.followedRecipes && (updatedUser.ingredients[0].name) && updatedUser.ingredients[0].amount) {
-            updatedUserData.ingredients = updatedUser.ingredients;
-        }
-        if (updatedUser.steps && Array.isArray(updatedUser.steps)) {
-            updatedUserData.steps = updatedUser.steps;
-        }
-        if (updatedUser.comments) {
-            updatedUserData.comments = updatedUser.comments;
-        }
+        
         let updatedCommand = {
             $set: updatedUserData
         };
@@ -82,11 +89,50 @@ module.exports = {
             _id: id
         };
         await userCollection.updateOne(query, updatedCommand);
-        return await this.getRecipeById(id);
+        return await this.getUserById(id);
     },
 
-    async removeUser(user) {
+    // async removeUser(user) {
 
+    // }
+
+    // get all followed recipes' id
+    async getFollowedRecipes(userId) {
+        let user = await getUserById(userId);
+        return user.followed_recipes;
+    },
+
+    async addFollowedRecipe(userId, recipeId) {
+        if (!recipeId) throw "must provide an recipe id"
+        const userCollection = await users();
+        const result = await userCollection.findOneAndUpdate({ _id: userId }, {
+            $addToSet: {
+                "followed_recipes": {
+                    recipe_id: recipeId,
+                }
+            }
+        }, {
+                returnNewDocument: true,
+                projection: { "followed_recipes": { $slice: -1 } }
+            });
+        return {
+            "recipe_id": result.value.comments[0].recipe_id,
+        };
+    },
+
+
+    async removeFollowedRecipe(userId, recipeId) {
+        if (!recipeId) throw "must provide recipe id";
+        const userCollection = await recipes();
+        const updateInfo = await userCollection.update({}, {
+            $pull: {
+                "comments":
+                    { recipe_id: recipeId }
+            }
+        });
+        if (updateInfo.deletedCount === 0) {
+            throw `Could not delete followed recipe with id of ${id}`;
+        }
     }
 };
 
