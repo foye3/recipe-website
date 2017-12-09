@@ -23,6 +23,10 @@ module.exports = {
         return recipe;
     },
 
+    async getRecipeByUser(id){
+        // todo
+    },
+
     async addRecipe(title, ingredients, steps) {
         if (typeof title !== "string") throw "No title provided";
         if (!steps || !Array.isArray(steps))

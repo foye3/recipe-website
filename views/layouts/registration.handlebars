@@ -3,10 +3,10 @@
     {{message }}
 </div>
 {{/if}}
-<form action="/register" method="post">
+<form action="/user/registration" method="post">
     <div>
-        <label>Username:</label>
-        <input type="text" name="username" />
+        <label>Email:</label>
+        <input type="text" name="email" />
     </div>
     <div>
         <label>Nickname:</label>
@@ -17,6 +17,7 @@
         <input type="password" name="password" />
     </div>
     <div>
-        <input type="submit" value="register" />
+        <input type="submit" value="registration" />
     </div>
 </form>
+<a href="/user/login">Have an accoutn? login</a>

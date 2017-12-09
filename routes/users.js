@@ -2,64 +2,109 @@ const data = require("../data");
 const userData = data.users;
 const express = require("express");
 const router = express.Router();
-
 const bcrypt = require("bcrypt");
-
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-
+const path = require("path");
+let notFound = path.resolve("./static/404.html");
 
 
 router.get("/", (req, res) => {
-    if (req.isAuthenticated()) {
-        res.render('layouts/private', { user: req.user });
-    } else {
-        let error = req.flash('error');
-        res.render('layouts/login', { message: error });
-    }
+    res.render('layouts/index', { user: req.user });
 });
 
-router.get("/register", (req, res) => {
-    res.render('layouts/register', { message: req.flash('error') });
+router.get("/registration", (req, res) => {
+    res.render('layouts/registration', { error : req.flash('error') });
 });
 
-router.post("/register", async (req, res) => {
+router.post("/registration", async (req, res) => {
+    let email = req.body.email;
+    let nickname = req.body.nickname;
+    let pwd = req.body.password;
     try {
-        let user = await userData.getUserByName(req.body.username);
+        //console.log("input email: "+ email);
+        let user = await userData.getUserByName(email);
         if (user) {
-            res.json({ message: "username has been taken" });
+            //res.json({ message: "username has been taken" });
+            res.render('layouts/registration',{ email: email, message: "email has been taken." });
         } else {
             let saltRounds = 16;
-            const hash = await bcrypt.hash(req.body.password, saltRounds);
-            let newUser = await userData.addUser(req.body.username, req.body.nickname, hash);
-            res.json({ statues: "success" });
+            const hash = await bcrypt.hash(pwd, saltRounds);
+            let newUser = await userData.addUser(email,nickname, hash);
+            res.redirect("login");
         }
     } catch (e) {
-        res.render('layouts/register',{ message: req.flash('error') });
+        console.log(e);
+        res.render('layouts/registration',{message:e});
     }
 });
 
+router.get('/login',(req,res)=>{
+    //console.log(req.flash('error'));
+    let m = req.flash('error');
+    console.log(m);
+    res.render('layouts/login',{message:m});
+});
+
+passport.use('local', new LocalStrategy(
+    async function (username, password, done) {
+        try {
+            const currUser = await userData.getUserByName(username);
+            //if(!currUser) return done(null,false,{message:"Incorrect username."});
+            //console.log(currUser);
+            const res = await comparePassword(password, currUser.hashed_pwd);
+            //if(!res) return done(null,false,{message: "incorrect password."})
+            return done(null, currUser);
+        } catch (error) {
+            return done(null, false, {message: "incorrect username or password" });
+        }
+    })
+);
+
 router.post('/login', passport.authenticate('local', {
-    successRedirect: '/private',
-    failureRedirect: '/',
+    successRedirect: 'profile',
+    failureRedirect: 'login',
     failureFlash: true
 }));
+
+
 
 router.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/');
 });
 
-router.get("/private", isLogedIn, (req, res) => {
-    res.render('layouts/private', { user: req.user });
+//go to user's profile 
+router.get("/profile", isLogedIn, async (req, res) => {
+    //if (req.isAuthenticated()) {
+        console.log(req.user);
+        res.render('layouts/profile',{user: req.user});
+    // } else {
+    //     let error = req.flash('error');
+    //     res.render('layouts/login', { message: error });
+    // }
 });
+
+
+
+//go to edit user information page
+// router.get("/updateProfile",(req, res)=>{
+//     res.render('layouts/updateprofile',{user: req.user});
+// });
+
+// router.post("/updateProfile",(req,res)=>{
+
+// });
+
+
 
 function isLogedIn(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
-    res.sendStatus(401);
-}
+    console.log("authenticated fail go to login page");
+    res.redirect('/user/login');
+};
 
 passport.serializeUser(function (user, done) {
     done(null, user._id);
@@ -70,21 +115,10 @@ passport.deserializeUser(async function (id, done) {
     done(null, user);
 });
 
-passport.use('local', new LocalStrategy(
-    async function (username, password, done) {
-        try {
-            const currUser = await userData.getUserByName(username);
-            await comparePassword(password, currUser.hashedPassword);
-            return done(null, currUser);
-        } catch (error) {
-            return done(null, false, { "message": error });
-        }
-    })
-);
-
 async function comparePassword(password, hashedPassword) {
     try {
         let res = await bcrypt.compare(password, hashedPassword);
+        //console.log("password compared result: "+res);
         if (res) {
             return res;
         } else {
@@ -93,7 +127,14 @@ async function comparePassword(password, hashedPassword) {
     } catch (error) {
         throw error;
     }
-}
+};
+
+
 
 
 module.exports = router;
+
+// To Do:
+// test: index.handlebars, profile.handlebars, 
+// bug: isAuthanticated is not a function in routes/index.js app.use()
+//      => wrong spell isAutenticated

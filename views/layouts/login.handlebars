@@ -1,9 +1,12 @@
-<p>{{errors}}</p>
+{{#if message }}
+<div class="alert alert-danger" role="alert">
+    {{message }}
+</div>
+{{/if}}
 
-
-<form action="/login" method="post">
+<form action="/user/login" method="post">
     <div>
-        <label>Username:</label>
+        <label>Email:</label>
         <input type="text" name="username"/>
     </div>
     <div>
@@ -16,5 +19,5 @@
 </form>
 
 <div>
-    <a href="/register">Don't have an account? Create one now</a>
+    <a href="/user/registration">Don't have an account? Create one now</a>
 </div>

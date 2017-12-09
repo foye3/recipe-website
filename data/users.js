@@ -60,11 +60,11 @@ module.exports = {
                 hashed_pwd: hashedPwd,
                 followed_recipes: []
             };
-            console.log(newUser._id);
+            console.log("newUser._id: "+newUser._id);
 
             const newInsertInformation = await userCollection.insertOne(newUser);
             const newId = newInsertInformation.insertedId;
-            return await this.getRecipeById(newId);
+            return await this.getUserById(newId);
 
         } catch (error) {
             throw error;

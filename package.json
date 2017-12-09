@@ -24,9 +24,11 @@
     "express": "^4.16.2",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
+    "jquery": "^3.2.1",
     "mongodb": "^2.2.33",
     "node-uuid": "^1.4.8",
     "passport": "^0.4.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7"
   }
 }
