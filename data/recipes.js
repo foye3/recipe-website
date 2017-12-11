@@ -23,8 +23,15 @@ module.exports = {
         return recipe;
     },
 
-    async getRecipeByUser(id){
-        // todo
+    async getRecipeByUser(userid){
+        console.log("getrecipebyuserid");
+        if(!userid) throw "must provide a user id";
+        const recipesCollection = await recipes();
+        const recipelist = recipesCollection.find({ user_id: userid }).toArray();
+        // if(!recipe)
+        // throw `recipe not found with user id: ${userid}`;
+        return recipelist;
+
     },
 
     async addRecipe(title, ingredients, steps) {

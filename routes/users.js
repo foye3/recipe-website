@@ -1,5 +1,6 @@
 const data = require("../data");
 const userData = data.users;
+const recipeData = data.recipes;
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
@@ -34,7 +35,7 @@ router.post("/registration", async (req, res) => {
             res.redirect("login");
         }
     } catch (e) {
-        console.log(e);
+        //console.log(e);
         res.render('layouts/registration',{message:e});
     }
 });
@@ -42,7 +43,7 @@ router.post("/registration", async (req, res) => {
 router.get('/login',(req,res)=>{
     //console.log(req.flash('error'));
     let m = req.flash('error');
-    console.log(m);
+    //console.log(m);
     res.render('layouts/login',{message:m});
 });
 
@@ -76,9 +77,17 @@ router.get('/logout', function (req, res) {
 
 //go to user's profile 
 router.get("/profile", isLogedIn, async (req, res) => {
-    //if (req.isAuthenticated()) {
-        console.log(req.user);
-        res.render('layouts/profile',{user: req.user});
+        //console.log(req.user);
+        try {
+            //console.log(req.user._id);
+            const recipeList = await recipeData.getRecipeByUser(req.user._id);
+            console.log(recipeList);
+            res.render('layouts/profile',{user: req.user, recipeList: recipeList});
+            //res.render('layouts/profile',{user: req.user});            
+        } catch (error) {
+            console.log(error);
+            res.sendFile(notFound);
+        }
     // } else {
     //     let error = req.flash('error');
     //     res.render('layouts/login', { message: error });
@@ -134,7 +143,6 @@ async function comparePassword(password, hashedPassword) {
 
 module.exports = router;
 
-// To Do:
-// test: index.handlebars, profile.handlebars, 
-// bug: isAuthanticated is not a function in routes/index.js app.use()
-//      => wrong spell isAutenticated
+// Next: 
+// profile recipe list
+// edit profile

@@ -1,7 +1,15 @@
-<p>{{user.username}}</p>
-<p>{{user.nickname}}</p>
-<p>{{user.id}}</p>
+<p>Email: {{user.user_name}}</p>
+<p>Nick Name: {{user.nick_name}}
+    <a href="user/">edit</a>
+</p>
+
 <p>profile</p>
 <p>
     <a href='/'>home</a>
 </p>
+{{#each recipeList}}
+    <li>{{title}}&nbsp;
+        <a href="">edit</a>
+    </li>
+    
+{{/each}}
