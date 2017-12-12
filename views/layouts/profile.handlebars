@@ -7,9 +7,19 @@
 <p>
     <a href='/'>home</a>
 </p>
+<a href="/recipe/add">add new recipe</a>
+
+<h2>my recipes:</h2>
 {{#each recipeList}}
     <li>{{title}}&nbsp;
-        <a href="">edit</a>
+        <a href="/recipe/id/{{_id}}">go to</a>
+    </li>
+    
+{{/each}}
+<h2>followed recipes:</h2>
+{{#each followedList}}
+    <li>{{title}}&nbsp;
+        <a href="/recipe/id/{{_id}}">go to</a>
     </li>
     
 {{/each}}

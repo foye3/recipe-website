@@ -1,0 +1,22 @@
+<h1>recipe</h1>
+<p>tittle: {{recipe.title}}</p>
+<p>Author:{{recipe.user}}</p>
+<h3>ingredients</h3>
+<p>
+    {{#each recipe.ingredients}}
+    <li>{{this.name}},{{this.amount}}</li>
+    {{/each}}
+</p>
+<h3>steps:</h3>
+<p>
+    {{#each recipe.steps}}
+    <li>{{this}}</li>
+    {{/each}}
+</p>
+<h3>comments:</h3>
+<p>
+    {{#each recipe.comments}}
+    <li>{{this.poster}},{{this.comment}}</li>
+    {{/each}}
+</p>
+

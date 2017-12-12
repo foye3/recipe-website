@@ -2,6 +2,51 @@ const mongoCollections = require("../config/mongoCollections");
 const recipes = mongoCollections.recipes;
 const uuid = require("node-uuid");
 
+//recipe data structure 
+/*
+{
+    "_id" : "6de25280-e4ce-44c8-97b1-168ec300847b",
+    "title" : "Fried Egg",
+    "ingredients" : [ 
+        {
+            "name" : "Egg",
+            "amount" : "2 eggs"
+        }, 
+        {
+            "name" : "Olive Oil",
+            "amount" : "1 tbsp"
+        }
+    ],
+    "steps" : [ 
+        "First, heat a non-stick pan on medium-high until hot", 
+        "Add the oil to the pan and allow oil to warm; it is ready the oil immediately sizzles upon contact with a drop of water.", 
+        "Crack the egg and place the egg and yolk in a small prep bowl; do not crack the yolk!", 
+        "Gently pour the egg from the bowl onto the oil", 
+        "Wait for egg white to turn bubbly and completely opaque (approx 2 min)", 
+        "Using a spatula, flip the egg onto its uncooked side until it is completely cooked (approx 2 min)", 
+        "Remove from oil and plate", 
+        "Repeat for second egg"
+    ],
+    "comments" : [ 
+        {
+            "_id" : "eebfa3f1-57e7-4b4c-a638-c82a3b71d611",
+            "poster" : "Fan Zhang",
+            "comment" : "great recipe"
+        }, 
+        {
+            "_id" : "178bc0de-f9fd-4953-a54f-8093981c4146",
+            "poster" : "Fan Zhang",
+            "comment" : "+1"
+        }, 
+        {
+            "_id" : "fdcf8fe2-3007-4aa4-a140-58edde443cfd",
+            "poster" : "Fan Zhang",
+            "comment" : "Easy and clear"
+        }
+    ]
+}
+*/
+
 module.exports = {
     async getAllRecipes() {
         try {
@@ -23,18 +68,42 @@ module.exports = {
         return recipe;
     },
 
-    async getRecipeByUser(userid){
+    async getRecipeByUserId(userid){
         console.log("getrecipebyuserid");
         if(!userid) throw "must provide a user id";
         const recipesCollection = await recipes();
-        const recipelist = recipesCollection.find({ user_id: userid }).toArray();
-        // if(!recipe)
-        // throw `recipe not found with user id: ${userid}`;
+        const recipelist = await recipesCollection.find({ user_id: userid }).toArray();
         return recipelist;
 
     },
+    async getRecipesByUser(uname) {
+    	console.log("uname:"+uname);
+        if(!uname) throw "must provide a user name";
+        const recipesCollection = await recipes();
+        const recipelist = await recipesCollection.find({ nick_name :uname }).toArray();
+        return recipelist;
+    },
 
-    async addRecipe(title, ingredients, steps) {
+    async getRecipesByTitle(title) {
+    	console.log("getRecipesByTitle:"+title);
+        if(!title) throw "must provide a recipe name";
+        const recipesCollection = await recipes();
+        const recipe = await recipesCollection.findOne({ title: {$regex: title,$options:'/'+title+'/i'}});
+        if (!recipe) throw "Recipe not found";
+        console.log(recipe);
+        return recipe;
+    },
+
+    async getRecipesByIngredient(ingredient){
+        console.log("Inside getRecipesByIngredient " + ingredient);
+        if(!ingredient) throw "must provide ingrdient";
+        const recipesCollection = await recipes();
+        const recipe = await recipesCollection.find({ "ingredients.name": {$regex: ingredient,$options:'/'+ingredient+'/i'}}).toArray();
+        console.log(recipe);
+        return recipe;
+    },
+
+    async addRecipe(title,userid, ingredients, steps) {
         if (typeof title !== "string") throw "No title provided";
         if (!steps || !Array.isArray(steps))
             throw "You must provide an array of steps for your recipe.";

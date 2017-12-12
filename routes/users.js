@@ -80,10 +80,19 @@ router.get("/profile", isLogedIn, async (req, res) => {
         //console.log(req.user);
         try {
             //console.log(req.user._id);
-            const recipeList = await recipeData.getRecipeByUser(req.user._id);
+            const recipeList = await recipeData.getRecipeByUserId(req.user._id);
             console.log(recipeList);
-            res.render('layouts/profile',{user: req.user, recipeList: recipeList});
-            //res.render('layouts/profile',{user: req.user});            
+            const followIdList = await userData.getFollowedRecipes(req.user._id);
+            const followedList = [];
+            for(let id of followIdList){    //get all followed recipes
+                console.log("recipeId:");
+                console.log(id);
+                let recipe = await recipeData.getRecipeById(id.recipe_id);
+                followedList.push(recipe);
+            }
+            console.log(followedList);
+            res.render('layouts/profile',{user: req.user, recipeList: recipeList, followedList: followedList});
+            //res.render('layouts/profile',{user: req.user,recipeList: recipeList});            
         } catch (error) {
             console.log(error);
             res.sendFile(notFound);
@@ -95,15 +104,6 @@ router.get("/profile", isLogedIn, async (req, res) => {
 });
 
 
-
-//go to edit user information page
-// router.get("/updateProfile",(req, res)=>{
-//     res.render('layouts/updateprofile',{user: req.user});
-// });
-
-// router.post("/updateProfile",(req,res)=>{
-
-// });
 
 
 
@@ -144,5 +144,4 @@ async function comparePassword(password, hashedPassword) {
 module.exports = router;
 
 // Next: 
-// profile recipe list
 // edit profile

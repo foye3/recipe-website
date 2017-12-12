@@ -98,7 +98,7 @@ module.exports = {
 
     // get all followed recipes' id
     async getFollowedRecipes(userId) {
-        let user = await getUserById(userId);
+        let user = await this.getUserById(userId);
         return user.followed_recipes;
     },
 
@@ -116,7 +116,7 @@ module.exports = {
                 projection: { "followed_recipes": { $slice: -1 } }
             });
         return {
-            "recipe_id": result.value.comments[0].recipe_id,
+            "recipe_id": result.value.followed_recipes[0].recipe_id,
         };
     },
 
@@ -126,7 +126,7 @@ module.exports = {
         const userCollection = await recipes();
         const updateInfo = await userCollection.update({}, {
             $pull: {
-                "comments":
+                "followed_recipes":
                     { recipe_id: recipeId }
             }
         });
