@@ -43,17 +43,32 @@ router.get("/add", (req, res) => {
 });
 
 // submit add recipe form
-router.post("/add",(req,res)=>{
+router.post("/add", async (req,res)=>{
     if(!req.user){
         res.redirect('/user/login');
     }
-    console.log(req.body);
-    let title = req.body.title;
-    let ingredients = req.body.ingredients;
-    let amounts = req.body.amounts;
-    let steps = req.body.steps;
-    let addrecipe = await recipeData.addRecipe(title,req.user._id,ingredients,steps)
-    // need solve addrecipe.js add html to page
+    try {
+        console.log(req.body);
+        let title = req.body.title;
+        let ingredientNames = req.body.ingredients;
+        let amounts = req.body.amounts;
+        let steps = req.body.steps;
+        let id =  req.user._id;
+
+        let ingredients = [];
+        for(let i=0;i<ingredientNames.length;i++){
+            let ingredient = {};
+            ingredient.name = ingredientNames[i];
+            ingredient.amount = amounts[i];
+            ingredients.push(ingredient);
+        }
+        console.log(ingredients);
+        let addrecipe = await recipeData.addRecipe(title,id,ingredients,steps);
+        res.redirect(`../user/profile`);
+    } catch (error) {
+        console.log(error);
+        res.redirect('../user/profile',{message: "faliure add resipe"});
+    }
 
 
 });

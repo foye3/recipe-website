@@ -103,18 +103,18 @@ module.exports = {
         return recipe;
     },
 
-    async addRecipe(title,userid, ingredients, steps) {
+    async addRecipe(title, userid, ingredients, steps) {
         if (typeof title !== "string") throw "No title provided";
+        if (!userid) throw "Must provid an user id"
         if (!steps || !Array.isArray(steps))
             throw "You must provide an array of steps for your recipe.";
-
         if (!ingredients || !ingredients[0].name || !ingredients[0].amount)
             throw "You must supply ingredients with keys 'name' and 'amount'";
-
         try {
             const recipeCollection = await recipes();
             const newRecipe = {
                 _id: uuid.v4(),
+                user_id : userid,
                 title: title,
                 ingredients: ingredients,
                 steps: steps,
