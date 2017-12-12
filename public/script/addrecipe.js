@@ -12,7 +12,7 @@ function addInputs(divname) {
                 "<br><label>ingredient: </label><input type='text' name='ingredients[]'/><label> ammount: </label><input type='text' name='amounts[]' />";
                 break;
             case "stepsdiv":
-                html = "<br><label> steps: </label><input type='text' name='steps[]'>"
+                html = "<br><label> steps: </label><textarea name='steps[]'></textarea>"
                 break;
         }
         //alert(html);

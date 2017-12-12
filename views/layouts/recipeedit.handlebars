@@ -1,22 +1,27 @@
 <h1>Edit Recipe</h1>
 <script src="/public/script/addrecipe.js" language="Javascript" type="text/javascript"></script>
 
-<form action="/recipe/add" method="post">
+<form action="/recipe/edit/{{originalRecipe._id}}" method="post">
     <div>
         <label>Tittle:</label>
-        <input type="text" name="title" />
+        <input type="text" name="title" value="{{originalRecipe.title}}"/>
     </div>
-    
     <div id = "ingredientsdiv">
+    {{#each originalRecipe.ingredients}}
         <label>ingredient:</label>
-        <input type="text" name="ingredients[]" />
+        <input type="text" name="ingredients[]" value="{{this.name}}"/>
         <label>ammount:</label>
-        <input type="text" name="amounts[]" />
+        <input type="text" name="amounts[]" value="{{this.amount}}"/>
+        <br>
+    {{/each}}
     </div>
     <input type="button" value="Add another text input" onClick="addInputs('ingredientsdiv');">
     <div id = "stepsdiv">
+        {{#each originalRecipe.steps}}
         <label>steps:</label>
-        <input type="text" name="steps[]" />
+        <textarea name="steps[]"/>{{this}}</textarea>
+        <br>
+        {{/each}}
     </div>
     <input type="button" value="Add another text input" onClick="addInputs('stepsdiv');">
     <div>
