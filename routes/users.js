@@ -81,16 +81,16 @@ router.get("/profile", isLogedIn, async (req, res) => {
         try {
             //console.log(req.user._id);
             const recipeList = await recipeData.getRecipeByUserId(req.user._id);
-            console.log(recipeList);
+            //console.log(recipeList);
             const followIdList = await userData.getFollowedRecipes(req.user._id);
             const followedList = [];
             for(let id of followIdList){    //get all followed recipes
-                console.log("recipeId:");
-                console.log(id);
+                // console.log("recipeId:");
+                // console.log(id);
                 let recipe = await recipeData.getRecipeById(id.recipe_id);
                 followedList.push(recipe);
             }
-            console.log(followedList);
+            //console.log(followedList);
             res.render('layouts/profile',{user: req.user, recipeList: recipeList, followedList: followedList});
             //res.render('layouts/profile',{user: req.user,recipeList: recipeList});            
         } catch (error) {
@@ -102,9 +102,6 @@ router.get("/profile", isLogedIn, async (req, res) => {
     //     res.render('layouts/login', { message: error });
     // }
 });
-
-
-
 
 
 function isLogedIn(req, res, next) {

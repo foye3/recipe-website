@@ -34,7 +34,7 @@
 
         <div class="row">
             <div class="col-sm-12 subscribe wow fadeInUp">
-                <form class="form-inline" role="form" action="recipe/search" method="post">
+                <form class="form-inline" role="form" action="/recipe/search" method="post">
                     <div class="form-group">
                         <label class="sr-only" for="subscribe-email">Email address</label>
                         <input type="text" name="search" placeholder="Enter Search Content..." class="subscribe-email form-control" id="subscribe-email">
@@ -60,8 +60,8 @@
                         
                         <img class="card-img-top img-fluid" src="../public/img/recipes/iphone-x.jpg" alt="iphone" />
                         <div class = "card-body">
-                            <h3 class="card-title">{{tittle}}</h3>
-                            <p class="card-text">iphone x is good</p>
+                            <a href="/recipe/id/{{_id}}" class="card-title">{{title}}</a>
+                            {{!-- <p class="card-text">{{title}}</p> --}}
                             <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#myModal01" >Details</a>
                         </div>
 
@@ -79,9 +79,9 @@
                                             
                                             {{#each ingredients}}
                                                 ingredient:
-                                                {{name}}
+                                                {{this.name}}
                                                 amount:
-                                                {{amount}}
+                                                {{this.amount}}
                                             {{/each}}
                                             
                                             steps:

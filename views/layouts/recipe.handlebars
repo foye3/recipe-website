@@ -1,8 +1,12 @@
 <h1>recipe</h1>
+
+{{#if isAuthor}}
 <a href="/recipe/edit/{{recipe._id}}">Edit</a>
 <a href="/recipe/delete/{{recipe._id}}">delete</a>
+{{/if}}
+
 <p>tittle: {{recipe.title}}</p>
-<p>Author:{{recipe.user}}</p>
+<p>Author:{{user.nick_name}}</p>
 <h3>ingredients</h3>
 <p>
     {{#each recipe.ingredients}}
@@ -21,4 +25,9 @@
     <li>{{this.poster}},{{this.comment}}</li>
     {{/each}}
 </p>
+{{#if isFollowed}}
+    <a href="/recipe/unfollow/{{recipe._id}}">unfollow</a>
+{{else}}
+    <a href="/recipe/follow/{{recipe._id}}">follow</a>
+{{/if}}
 

@@ -3,12 +3,18 @@ const recipesRoutes = require("./recipes");
 
 const constructorMethod = (app) => {
 
+    // app.use(function(err, req, res, next) {
+    //     // Do logging and user-friendly error message display
+    //     console.error(err);
+    //     res.status(500).send('internal server error');
+    // })
     app.use("/user", usersRoutes);
-    app.use("/recipe",recipesRoutes);
+    app.use("/recipe", recipesRoutes);
     app.use("/",(req,res)=>{
         let obj = {};
         obj.islogin = false;
-        if(req.user){
+        //console.log(req.isAuthenticated());
+        if(req.isAuthenticated()){
             // let html = 
             // `<ul>\
             //     <li>Hi ${req.user.nick_name} </li>\
@@ -29,6 +35,7 @@ const constructorMethod = (app) => {
         //res.render('layouts/index',obj);
         res.render('layouts/index',{obj: obj});
     });
+    
     app.use("*", (req, res) => {
         res.status(404).json({error:"Route Not Found"});
     });

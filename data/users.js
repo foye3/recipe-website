@@ -115,16 +115,19 @@ module.exports = {
                 returnNewDocument: true,
                 projection: { "followed_recipes": { $slice: -1 } }
             });
-        return {
-            "recipe_id": result.value.followed_recipes[0].recipe_id,
-        };
+            //console.log(result);
+            console.log("followed success");            
+        return true;
+        // return {
+        //     "recipe_id": result.value.followed_recipes[0].recipe_id,
+        // };
     },
 
 
     async removeFollowedRecipe(userId, recipeId) {
         if (!recipeId) throw "must provide recipe id";
-        const userCollection = await recipes();
-        const updateInfo = await userCollection.update({}, {
+        const userCollection = await users();
+        const updateInfo = await userCollection.update({_id: userId}, {
             $pull: {
                 "followed_recipes":
                     { recipe_id: recipeId }
@@ -133,6 +136,29 @@ module.exports = {
         if (updateInfo.deletedCount === 0) {
             throw `Could not delete followed recipe with id of ${id}`;
         }
+        console.log("remove followed recipe success");
+        return true;
+    },
+
+    async isFollowed(userid, recipeid){
+        // console.log("uid: "+userid);
+        // console.log("rid: "+recipeid);
+        
+        if (!userid) throw "must provide user id";
+        if (!recipeid) throw "must provide recipe id";
+        const userCollection = await users();
+        const followed_recipes = await userCollection.findOne({_id: userid,
+            followed_recipes: {
+                $elemMatch: {
+                    recipe_id: recipeid
+                }
+            }
+        });
+        // console.log(followed_recipes);
+        if (followed_recipes) return true;
+        //console.log("followed recipe id: " + user.followed_recipes[0].recipe_id);
+        return false;
+        
     }
 };
 

@@ -1,3 +1,9 @@
+{{#if message}}
+<div class="alert alert-danger" role="alert">
+    {{message}}
+</div>
+{{/if}}
+
 <p>Email: {{user.user_name}}</p>
 <p>Nick Name: {{user.nick_name}}
     <a href="user/">edit</a>
