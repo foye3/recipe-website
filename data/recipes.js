@@ -43,7 +43,13 @@ const uuid = require("node-uuid");
             "poster" : "Fan Zhang",
             "comment" : "Easy and clear"
         }
+    ],
+    "rates" : [
+        "_id" : "",
+        "user_id" : "",
+        "rate" : ""
     ]
+
 }
 */
 
@@ -68,37 +74,37 @@ module.exports = {
         return recipe;
     },
 
-    async getRecipeByUserId(userid){
+    async getRecipeByUserId(userid) {
         console.log("getrecipebyuserid");
-        if(!userid) throw "must provide a user id";
+        if (!userid) throw "must provide a user id";
         const recipesCollection = await recipes();
         const recipelist = await recipesCollection.find({ user_id: userid }).toArray();
         return recipelist;
 
     },
     async getRecipesByUser(uname) {
-    	console.log("uname:"+uname);
-        if(!uname) throw "must provide a user name";
+        console.log("uname:" + uname);
+        if (!uname) throw "must provide a user name";
         const recipesCollection = await recipes();
-        const recipelist = await recipesCollection.find({ nick_name :uname }).toArray();
+        const recipelist = await recipesCollection.find({ nick_name: uname }).toArray();
         return recipelist;
     },
 
     async getRecipesByTitle(title) {
-    	console.log("getRecipesByTitle:"+title);
-        if(!title) throw "must provide a recipe name";
+        console.log("getRecipesByTitle:" + title);
+        if (!title) throw "must provide a recipe name";
         const recipesCollection = await recipes();
-        const recipe = await recipesCollection.find({ title: {$regex: title,$options:'/'+title+'/i'}}).toArray();
+        const recipe = await recipesCollection.find({ title: { $regex: title, $options: '/' + title + '/i' } }).toArray();
         if (!recipe) throw "Recipe not found";
         console.log(recipe);
         return recipe;
     },
 
-    async getRecipesByIngredient(ingredient){
+    async getRecipesByIngredient(ingredient) {
         console.log("Inside getRecipesByIngredient " + ingredient);
-        if(!ingredient) throw "must provide ingrdient";
+        if (!ingredient) throw "must provide ingrdient";
         const recipesCollection = await recipes();
-        const recipe = await recipesCollection.find({ "ingredients.name": {$regex: ingredient,$options:'/'+ingredient+'/i'}}).toArray();
+        const recipe = await recipesCollection.find({ "ingredients.name": { $regex: ingredient, $options: '/' + ingredient + '/i' } }).toArray();
         console.log(recipe);
         return recipe;
     },
@@ -114,7 +120,7 @@ module.exports = {
             const recipeCollection = await recipes();
             const newRecipe = {
                 _id: uuid.v4(),
-                user_id : userid,
+                user_id: userid,
                 title: title,
                 ingredients: ingredients,
                 steps: steps,
@@ -173,22 +179,23 @@ module.exports = {
         const recipeCollection = await recipes();
         const result = await recipeCollection.findOneAndUpdate({ _id: recipeId }, {
             $addToSet: {
-                "comments": {
+                comments: {
                     _id: commentId,
                     poster: poster,
                     comment: comment
                 }
             }
         }, {
-                returnNewDocument: true,
-                projection: { "comments": { $slice: -1 } }
+                projection: { comments: { $slice: -1 } }
             });
         //console.log(result);
-        return {
-            "_id": result.value.comments[0]._id,
-            "poster": result.value.comments[0].poster,
-            "comment": result.value.comments[0].comment
-        };
+        console.log("add comment success");
+        return true;
+        // return {
+        //     "_id": result.value.comments[0]._id,
+        //     "poster": result.value.comments[0].poster,
+        //     "comment": result.value.comments[0].comment
+        // };
     },
 
     async getCommentById(id) {
@@ -217,7 +224,7 @@ module.exports = {
         const updateInfo = await recipeCollection.update({}, {
             $pull: {
                 "comments":
-                { _id: id }
+                    { _id: id }
             }
         });
         if (updateInfo.deletedCount === 0) {
@@ -238,10 +245,6 @@ module.exports = {
         }
         const recipeCollection = await recipes();
         //await recipeCollection.updateOne({_id:recipeId, comments:{$elemMatch:{_id:commentId}}},updateCommand);
-        
-
-
-
 
         await recipeCollection.findAndModify({
             "_id": recipeId, "comments": {
@@ -256,12 +259,12 @@ module.exports = {
         return this.getCommentById(commentId);
     },
 
-    async getCommentsByRecipeId(recipeId){
-        if(!recipeId) throw "must provide a recipe id for search";
+    async getCommentsByRecipeId(recipeId) {
+        if (!recipeId) throw "must provide a recipe id for search";
         const recipeCollection = await recipes();
-        const recipe = await recipeCollection.findOne({_id: recipeId});
+        const recipe = await recipeCollection.findOne({ _id: recipeId });
         let result = [];
-        for(i = 0;i<recipe.comments.length;i++){
+        for (i = 0; i < recipe.comments.length; i++) {
             result.push({
                 "_id": recipe.comments[i]._id,
                 "recipeId": recipe._id,
@@ -269,7 +272,62 @@ module.exports = {
                 "poster": recipe.comments[i].poster,
                 "comment": recipe.comments[i].comment
             })
-        }       
-        return result; 
-    }
+        }
+        return result;
+    },
+
+    async addRate(recipeid, userid, rate) {
+        if (!recipeid) throw "must provide a recipe id";
+        if (!rate) throw "must provide a rate";
+        let rateid = uuid.v4();
+        const recipeCollection = await recipes();
+        const result = await recipeCollection.findOneAndUpdate({ _id: recipeid }, {
+            $addToSet: {
+                rates: {
+                    _id: rateid,
+                    rate: rate,
+                    user_id: userid
+                }
+            }
+        },
+            {
+                projection: { comments: { $slice: -1 } }
+            });
+        console.log("add comment success");
+        return true;
+    },
+
+    async isRated(userid,recipeid){
+        if (!userid) throw "must provide user id";
+        if (!recipeid) throw "must provide recipe id";
+        const recipeCollection = await recipes();
+        const rate = await recipeCollection.findOne({_id: recipeid,
+            rates: {
+                $elemMatch: {
+                    user_id: userid
+                }
+            }
+        });
+        console.log("rate:");
+        console.log(rate);
+        if (rate) return true;
+        //console.log("followed recipe id: " + user.followed_recipes[0].recipe_id);
+        return false;
+    },
+
+    //return recipe's average rating 
+    // async getRate(recipeid){
+    //     if(!recipeid) throw "must provide recipe id";
+    //     const recipeCollection = await recipes();
+    //     const recipe = await recipeCollection.findOne({ _id: recipeid });
+    //     console.log(recipe);
+    //     if(!recipe.rates||recipe.rates.length===0)
+    //         return null;
+    //     let sum = 0;
+    //     for (i = 0; i < recipe.rates.length; i++) {
+    //         sum += recipe.rates.rate;
+    //     }
+    //     console.log("sum:"+sum,"length"+recipe.rates.length,"res:"+sum/recipe.rates.length);
+    //     return sum/recipe.rates.length;
+    // }
 };

@@ -13,15 +13,25 @@ let notFound = path.resolve("./static/404.html");
 router.get("/id/:id", async (req, res) => {
     let author = false;
     let followed = false;
+    let rated = false;
     if(req.isAuthenticated()){
         author = await isAuthor(req.user._id,req.params.id);
         followed = await userData.isFollowed(req.user._id,req.params.id);
+        rated = await recipeData.isRated(req.user._id,req.params.id);
     }
+    //let avgRate = await recipeData.getRate(req.params.id);
     console.log("is followed:"+followed);
     let id = req.params.id;
     let recipe = await recipeData.getRecipeById(id);
     let user = await userData.getUserById(recipe.user_id);
-    res.render("layouts/recipe", { recipe: recipe,user : user ,isAuthor : author, isFollowed : followed});
+    let sum = 0;
+    for (i = 0; i < recipe.rates.length; i++) {
+        sum += parseInt(recipe.rates[i].rate);
+    }
+    console.log("average rate:"+sum,recipe.rates.length)
+    let avgRate = (sum/recipe.rates.length).toFixed(2);
+    res.render("layouts/recipe", { recipe: recipe,user : user ,isAuthor : author, 
+        isFollowed : followed, isRated : rated, avgRate: avgRate});
 });
 
 // get all recipes
@@ -30,8 +40,7 @@ router.get("/", async (req, res) => {
         let recipelist = await recipeData.getAllRecipes()
         res.json(recipeList);
     } catch (error) {
-        res.sendStatus(500);
-    }
+        res.sendStatus(404,{message:error});    }
 });
 
 
@@ -52,8 +61,7 @@ router.post("/search", async (req, res) => {
         res.render("layouts/index", { obj : obj });
     } catch (error) {
         console.log(error);
-        res.sendFile(notFound);
-    }
+        res.sendStatus(500,{message:error});    }
 });
 
 // go to add recipe page
@@ -83,7 +91,8 @@ router.post("/add", isLogedIn ,async (req, res) => {
         res.redirect(`/user/profile`);
     } catch (error) {
         console.log(error);
-        res.redirect('/user/profile', { message: "faliure add resipe" });
+        // res.redirect('/user/profile', { message: "faliure add resipe" });
+        res.sendStatus(500,{message:error});
     }
 
 
@@ -100,7 +109,8 @@ router.get("/edit/:id",isLogedIn, async (req, res) => {
         res.render("layouts/recipeedit", { originalRecipe: originalRecipe });
     } catch (error) {
         console.log(error);
-        res.redirect(`/recipe/id/${req.params.id}`, { message: "faliure edit resipe" });
+        // res.redirect(`/recipe/id/${req.params.id}`, { message: "faliure edit resipe" });
+        res.sendStatus(404,{message:error});
     }
 });
 
@@ -138,7 +148,8 @@ router.get("/delete/:id",isLogedIn, async (req, res) => {
         let removerecipe = await recipeData.removeRecipe(req.params.id);
         res.redirect("/user/profile");
     } catch (error) {
-        res.json({ message: "faliure to delete" });
+        // res.json({ message: "faliure to delete" });
+        res.sendStatus(500,{message:error});        
     }
 });
 
@@ -149,7 +160,8 @@ router.get("/follow/:recipeid", isLogedIn, async (req, res) => {
         res.redirect(`/recipe/id/${req.params.recipeid}`);
     }catch(error){
         console.log(error);
-        res.redirect(`/recipe/id/${req.params.recipeid}`);
+        // res.redirect(`/recipe/id/${req.params.recipeid}`);
+        res.sendStatus(500,{message:error});        
     }
 });
 
@@ -159,15 +171,39 @@ router.get("/unfollow/:recipeid", isLogedIn, async (req, res) => {
         res.redirect(`/recipe/id/${req.params.recipeid}`);
     }catch(error){
         console.log(error);
-        res.redirect(`/recipe/id/${req.params.recipeid}`);
+        //res.redirect(`/recipe/id/${req.params.recipeid}`);
+        res.sendStatus(500,{message:error});
     }
 
 });
 
-// // post comment
-// router.post("/comment/:recipeid",async (req,res)=>{
+// post comment
+router.post("/comment/:recipeid",isLogedIn, async (req,res)=>{
+    try{
+        let comment = req.body.comment;
+        let recipeid= req.params.recipeid;
+        let poster = req.user.nick_name;
+        let result = recipeData.addComment(recipeid,poster,comment);
+        res.redirect(`/recipe/id/${recipeid}`);
+    }catch(error){
+        console.log(error);
+        res.sendStatus(500,{message:error});
+    }
+});
 
-// });
+router.post("/rating/:recipeid",isLogedIn, async (req,res)=>{
+    try{
+        let rate = req.body.rate;
+        let recipeid= req.params.recipeid;
+        let userid = req.user._id;
+        //console.log(rate,recipeid);
+        let result = recipeData.addRate(recipeid,userid,rate);
+        res.redirect(`/recipe/id/${recipeid}`);
+    }catch(error){
+        console.log(error);
+        res.sendStatus(500,{message:error});
+    }
+});
 
 
 function isLogedIn(req, res, next) {

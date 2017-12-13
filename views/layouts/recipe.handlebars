@@ -2,10 +2,11 @@
 
 {{#if isAuthor}}
 <a href="/recipe/edit/{{recipe._id}}">Edit</a>
-<a href="/recipe/delete/{{recipe._id}}">delete</a>
+<a onclick = "javascript:return confirm('comfirm')" href="/recipe/delete/{{recipe._id}}">delete</a>
 {{/if}}
 
 <p>tittle: {{recipe.title}}</p>
+<p>rating: {{avgRate}}</p>
 <p>Author:{{user.nick_name}}</p>
 <h3>ingredients</h3>
 <p>
@@ -19,15 +20,38 @@
     <li>{{this}}</li>
     {{/each}}
 </p>
+
+{{#if isFollowed}}
+<a href="/recipe/unfollow/{{recipe._id}}">unfollow</a>
+{{else}}
+<a href="/recipe/follow/{{recipe._id}}">follow</a>
+{{/if}} 
+{{#if isRated}} 
+    <p> you have already rated</p>
+{{else}}
+<form role="form" action="/recipe/rating/{{recipe._id}}" method="post" class="registration-form">
+    <select name="rate">
+        <option value="5">5</option>
+        <option value="4">4</option>
+        <option value="3">3</option>
+        <option value="2">2</option>
+        <option value="1">1</option>
+    </select>
+    <button type="submit" class="btn">rating</button>
+</form>
+{{/if}}
 <h3>comments:</h3>
 <p>
-    {{#each recipe.comments}}
+    {{#unless recipe.comments}}
+    <p>There has no comment.</p>
+    {{/unless}} {{#each recipe.comments}}
     <li>{{this.poster}},{{this.comment}}</li>
     {{/each}}
 </p>
-{{#if isFollowed}}
-    <a href="/recipe/unfollow/{{recipe._id}}">unfollow</a>
-{{else}}
-    <a href="/recipe/follow/{{recipe._id}}">follow</a>
-{{/if}}
-
+<h3>Make a comment:</h3>
+<form role="form" action="/recipe/comment/{{recipe._id}}" method="post" class="registration-form">
+    <div class="form-group">
+        <textarea name="comment" placeholder="Input your comment" class="form-first-name form-control" id="form-first-name"></textarea>
+    </div>
+    <button type="submit" class="btn">Submit</button>
+</form>
