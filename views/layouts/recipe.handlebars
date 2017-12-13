@@ -6,7 +6,11 @@
 {{/if}}
 
 <p>tittle: {{recipe.title}}</p>
-<p>rating: {{avgRate}}</p>
+<p>rating: {{#if avgRate}}
+    {{avgRate}}
+    {{else}}
+    No rating
+    {{/if}}</p>
 <p>Author:{{user.nick_name}}</p>
 <h3>ingredients</h3>
 <p>

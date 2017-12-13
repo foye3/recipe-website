@@ -6,6 +6,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const xss = require("xss");
 const path = require("path");
 let notFound = path.resolve("./static/404.html");
 
@@ -19,9 +20,9 @@ router.get("/registration", (req, res) => {
 });
 
 router.post("/registration", async (req, res) => {
-    let email = req.body.email;
-    let nickname = req.body.nickname;
-    let pwd = req.body.password;
+    let email = xss(req.body.email);
+    let nickname = xss(req.body.nickname);
+    let pwd = xss(req.body.password);
     try {
         //console.log("input email: "+ email);
         let user = await userData.getUserByName(email);

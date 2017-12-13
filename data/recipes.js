@@ -75,7 +75,7 @@ module.exports = {
     },
 
     async getRecipeByUserId(userid) {
-        console.log("getrecipebyuserid");
+        console.log("getRecipeByUserId");
         if (!userid) throw "must provide a user id";
         const recipesCollection = await recipes();
         const recipelist = await recipesCollection.find({ user_id: userid }).toArray();
