@@ -6,19 +6,25 @@
         <label>Tittle:</label>
         <input type="text" name="title" />
     </div>
-    
-    <div id = "ingredientsdiv">
-        <label>ingredient:</label>
-        <input type="text" name="ingredients[]" />
-        <label>ammount:</label>
-        <input type="text" name="amounts[]" />
+
+    <div id="ingredientsdiv">
+        <div>
+            <label>ingredient:</label>
+            <input type="text" name="ingredients[]" />
+            <label>ammount:</label>
+            <input type="text" name="amounts[]" />
+        </div>
     </div>
     <input type="button" value="Add another text input" onClick="addInputs('ingredientsdiv');">
-    <div id = "stepsdiv">
-        <label>steps:</label>
-        <input type="text" name="steps[]" />
+    <input type="button" value="Delete one text" onClick="removeInputs('ingredientsdiv');">
+    <div id="stepsdiv">
+        <div>
+            <label>steps:</label>
+            <input type="text" name="steps[]" />
+        </div>
     </div>
     <input type="button" value="Add another text input" onClick="addInputs('stepsdiv');">
+    <input type="button" value="Delete one step" onClick="removeInputs('stepsdiv');">
     <div>
         <input type="submit" value="submit" />
     </div>

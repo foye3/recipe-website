@@ -88,7 +88,7 @@ module.exports = {
     	console.log("getRecipesByTitle:"+title);
         if(!title) throw "must provide a recipe name";
         const recipesCollection = await recipes();
-        const recipe = await recipesCollection.findOne({ title: {$regex: title,$options:'/'+title+'/i'}});
+        const recipe = await recipesCollection.find({ title: {$regex: title,$options:'/'+title+'/i'}}).toArray();
         if (!recipe) throw "Recipe not found";
         console.log(recipe);
         return recipe;
@@ -137,6 +137,7 @@ module.exports = {
         if (deletionInfo.deletedCount === 0) {
             throw `Could not delete recipe with id of ${id}`;
         }
+        return deletionInfo;
     },
 
     async  updateRecipe(id, updatedRecipe) {

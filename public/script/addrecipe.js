@@ -1,24 +1,70 @@
-var counter = 1;
-var limit = 30;
+var ingredientCounter = 1;
+var stepCounter = 1;
+var limit = 10;
 function addInputs(divname) {
-    if (counter == limit) {
-        alert("You have reached the limit of adding " + counter + " inputs");
+    if (ingredientCounter == limit) {
+        alert("You have reached the limit of adding " + ingredientCounter + " inputs");
     }
     else {
         let html;
         switch (divname) {
             case "ingredientsdiv":
                 html = 
-                "<br><label>ingredient: </label><input type='text' name='ingredients[]'/><label> ammount: </label><input type='text' name='amounts[]' />";
+                `<div id = '${ingredientCounter}'><label>ingredient: </label><input type='text' name='ingredients[]'/><label> ammount: </label><input type='text' name='amounts[]' /></div>`;
+                ingredientCounter++;
                 break;
             case "stepsdiv":
-                html = "<br><label> steps: </label><textarea name='steps[]'></textarea>"
+                html = `<div id = '${stepCounter}'><label> steps: </label><textarea name='steps[]'></textarea>`;
+                stepCounter++;
                 break;
         }
         //alert(html);
-        var newdiv = document.createElement('div');
-        newdiv.innerHTML = html;
-        document.getElementById(divname).appendChild(newdiv);
-        counter++;
+            var newdiv = document.createElement('div');
+            newdiv.innerHTML = html;
+            document.getElementById(divname).appendChild(newdiv);
+            // ingredientCounter++;
+
+ 
+    }
+}
+function removeInputs(divName){
+    if(divName == "ingredientsdiv"){
+        if(ingredientCounter == 1){
+            alert("We need some ingredents");
+        }
+        else{
+            // let html;
+            // switch(divName){
+            //     case "ingredientsdiv":
+            //     ""
+            //     break;
+            // }
+            var my = document.getElementById(divName);
+            if (my != null){
+                my.removeChild(my.lastChild);
+            }
+            ingredientCounter--;
+    
+        }
+    }
+    else {
+        if(stepCounter == 1){
+            alert("We need some steps to cook");
+        }
+        else{
+            // let html;
+            // switch(divName){
+            //     case "ingredientsdiv":
+            //     ""
+            //     break;
+            // }
+            var my = document.getElementById(divName);
+            if (my != null){
+                my.removeChild(my.lastChild)
+            }
+            stepCounter--;
+    
+        }
+    
     }
 }

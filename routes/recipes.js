@@ -29,22 +29,45 @@ router.get("/", async (req, res) => {
 
 // // serach recipes by title
 // router.get("/:title", (req, res) => {
-    
-// });
-
-// // search by ingredient
-// router.get("/:ingredinet", (req, res) => {
 
 // });
+
+// search by ingredient
+
+
+/*
+    want to display search result on index page
+    => does redirect can pass json data
+    or move routes/index stuff 
+*/
+router.post("/search", async (req, res) => {
+    try {
+        //console.log(req.body);
+        let obj = {};
+        if (req.user) {
+            obj.islogin = true;
+        }
+        let recipelist = await recipeData.getRecipesByTitle(req.body.search);
+        if (!recipelist) {
+            recipelist = await recipeData.getRecipesByIngredient(req.body.search);
+        }
+        obj.recipelist = recipelist;
+        console.log(recipelist);
+        res.render("layouts/index", { obj : obj });
+    } catch (error) {
+        console.log(error);
+        res.redirect("/");
+    }
+});
 
 // go to add recipe page
-router.get("/add", (req, res) => {
+router.get("/add", async (req, res) => {
     res.render("layouts/addrecipe");
 });
 
 // submit add recipe form
-router.post("/add", async (req,res)=>{
-    if(!req.user){
+router.post("/add", async (req, res) => {
+    if (!req.user) {
         res.redirect('/user/login');
     }
     try {
@@ -53,21 +76,21 @@ router.post("/add", async (req,res)=>{
         let ingredientNames = req.body.ingredients;
         let amounts = req.body.amounts;
         let steps = req.body.steps;
-        let id =  req.user._id;
+        let id = req.user._id;
 
         let ingredients = [];
-        for(let i=0;i<ingredientNames.length;i++){
+        for (let i = 0; i < ingredientNames.length; i++) {
             let ingredient = {};
             ingredient.name = ingredientNames[i];
             ingredient.amount = amounts[i];
             ingredients.push(ingredient);
         }
         console.log(ingredients);
-        let addrecipe = await recipeData.addRecipe(title,id,ingredients,steps);
+        let addrecipe = await recipeData.addRecipe(title, id, ingredients, steps);
         res.redirect(`../user/profile`);
     } catch (error) {
         console.log(error);
-        res.redirect('../user/profile',{message: "faliure add resipe"});
+        res.redirect('../user/profile', { message: "faliure add resipe" });
     }
 
 
@@ -76,12 +99,15 @@ router.post("/add", async (req,res)=>{
 // // go to recipe edit page
 router.get("/edit/:id", async (req, res) => {
     //login state
-    try{
+    try {
         let originalRecipe = await recipeData.getRecipeById(req.params.id);
-        res.render("layouts/recipeedit",{originalRecipe:originalRecipe});
-    }catch(error){
+        if (!originalRecipe) {
+            res.redirect();
+        }
+        res.render("layouts/recipeedit", { originalRecipe: originalRecipe });
+    } catch (error) {
         console.log(error);
-        res.redirect(`/id/${req.params.id}`,{message: "faliure add resipe"});
+        res.redirect(`/id/${req.params.id}`, { message: "faliure add resipe" });
     }
 });
 
@@ -91,30 +117,35 @@ router.post("/edit/:id", async (req, res) => {
     let ingredientNames = req.body.ingredients;
     let amounts = req.body.amounts;
     let ingredients = [];
-    for(let i=0;i<ingredientNames.length;i++){
+    for (let i = 0; i < ingredientNames.length; i++) {
         let ingredient = {};
         ingredient.name = ingredientNames[i];
         ingredient.amount = amounts[i];
         ingredients.push(ingredient);
     }
 
-    let updaterecipe ={};    
+    let updaterecipe = {};
     updaterecipe.title = req.body.title;
     updaterecipe.steps = req.body.steps;
     updaterecipe.ingredients = ingredients;
     console.log(ingredients);
-    let addrecipe = await recipeData.updateRecipe(recipeid,updaterecipe);
+    let addrecipe = await recipeData.updateRecipe(recipeid, updaterecipe);
     res.redirect(`../id/${req.params.id}`);
 });
 
-// // delete recipe
-// router.delete("/:id", (req, res) => {
-    
-// });
+// delete recipe
+router.get("/delete/:id", async (req, res) => {
+    try {
+        let removerecipe = await recipeData.removeRecipe(req.params.id);
+        res.redirect("../../user/profile");
+    } catch (error) {
+        res.json({ message: "faliure to delete" });
+    }
+});
 
 // // follow recipe
 // router.get("/follow/:userid/:recipeid", (req, res) => {
-    
+
 // });
 
 // // post comment
