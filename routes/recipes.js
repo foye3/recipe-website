@@ -15,10 +15,10 @@ router.get("/id/:id", async (req, res) => {
     let author = false;
     let followed = false;
     let rated = false;
-    let userid = req.user._id;
     let recipeid = req.params.id;
-
+    
     if (req.isAuthenticated()) {
+        let userid = req.user._id;
         author = await isAuthor(userid, recipeid);
         followed = await userData.isFollowed(userid, recipeid);
         rated = await recipeData.isRated(userid, recipeid);
@@ -27,7 +27,7 @@ router.get("/id/:id", async (req, res) => {
     //let avgRate = await recipeData.getRate(req.params.id);
     console.log("is followed:" + followed);
     let recipe = await recipeData.getRecipeById(recipeid);
-    let user = await userData.getUserById(userid);
+    let user = await userData.getUserById(recipe.user_id);
 
     let avgRate;
     if (recipe.rates) {

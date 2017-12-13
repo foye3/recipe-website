@@ -1,31 +1,104 @@
-{{#if message}}
-<div class="alert alert-danger" role="alert">
-    {{message}}
+<div id="wrapper">
+        {{!-- <div class="overlay"></div> --}}
+    
+        <!-- Sidebar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+            <ul class="nav sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                       profile
+                    </a>
+                </li>
+                <li>
+                    <a href="/"><i class="fa fa-fw fa-home"></i> Home</a>
+                </li>
+                <li>
+                    <a href="#"></i>{{user.nick_name}}</a>
+                </li>
+                <li>
+                    <a href="#"> {{user.user_name}}</a>
+                    {{!-- <i class="fa fa-fw fa-file-o"></i> --}}
+                </li>
+                {{!-- <li>
+                    <a href="#"> My Recipes</a>
+                </li> --}}
+                {{!-- <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-plus"></i> Dropdown <span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li class="dropdown-header">Dropdown heading</li>
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li><a href="#">Separated link</a></li>
+                    <li><a href="#">One more separated link</a></li>
+                  </ul>
+                </li> --}}
+                {{!-- <li>
+                    <a href="#"> Followed Recipes</a>
+                </li> --}}
+                <li>
+                    <a href="/recipe/add"> Add New Recipe</a>
+                </li>
+                
+            </ul>
+        </nav>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+          <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
+            <span class="hamb-top"></span>
+            <span class="hamb-middle"></span>
+            <span class="hamb-bottom"></span>
+          </button>
+            <div class="container">
+                <div class="row">
+                    <div>
+                        <h2><strong>My recipes:</strong></h2>
+                        {{#each recipeList}}
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <div class="card" id="iPhone X">
+                                    
+                                    <img href="/recipe/id/{{_id}}" class="card-img-top img-fluid" src="../public/img/recipes/iphone-x.jpg" alt="iphone" />
+                                    <div class = "card-body">
+                                        <a href="/recipe/id/{{_id}}" ><h3 class="card-title">{{title}}</h3></a>
+                                        <a href="/recipe/edit/{{_id}}" class="btn btn-primary" >Update</a>
+                                    </div>
+
+                        
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
+                    
+                </div>
+                <div class = "row">
+                        <h2><strong>Followed recipes:</strong></h2>
+                        {{#each followedList}}
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <div class="card" id="iPhone X">
+                                    
+                                    <img class="card-img-top img-fluid" src="../public/img/recipes/iphone-x.jpg" alt="iphone" />
+                                    <div class = "card-body">
+                                        <h3 class="card-title">{{title}}</h3>
+                                        <a href="/recipe/edit/{{_id}}" class="btn btn-primary" data-toggle="modal" data-target="#myModal01" >Update</a>
+                                    </div>
+
+                        
+                                </div>
+                            </div>
+                        {{/each}}
+                </div>
+            </div>
+        </div>
+        
+        <!-- /#page-content-wrapper -->
+
 </div>
-{{/if}}
+<!-- /#wrapper -->
 
-<p>Email: {{user.user_name}}</p>
-<p>Nick Name: {{user.nick_name}}
-    <a href="user/">edit</a>
-</p>
 
-<p>profile</p>
-<p>
-    <a href='/'>home</a>
-</p>
-<a href="/recipe/add">add new recipe</a>
 
-<h2>my recipes:</h2>
-{{#each recipeList}}
-    <li>{{title}}&nbsp;
-        <a href="/recipe/id/{{_id}}">go to</a>
-    </li>
-    
-{{/each}}
-<h2>followed recipes:</h2>
-{{#each followedList}}
-    <li>{{title}}&nbsp;
-        <a href="/recipe/id/{{_id}}">go to</a>
-    </li>
-    
-{{/each}}
+
+
+

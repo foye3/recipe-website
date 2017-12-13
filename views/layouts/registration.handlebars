@@ -1,4 +1,4 @@
-<div class="top-content">
+<div class="top-content1">
 
     <div class="inner-bg">
         <div class="container">
@@ -27,15 +27,16 @@
                                 <i class="fa fa-pencil"></i>
                             </div>
                         </div>
-                        <div class="form-bottom">{{#if message }}
-                            <div class="alert alert-danger" role="alert">
-                                {{message }}
-                            </div>
-                            {{/if}}
+                        <div class="form-bottom">
+                        {{#if message }}
+                        <div class="alert alert-danger" role="alert">
+                            {{message }}
+                        </div>
+                        {{/if}}
                             <form role="form" action="/user/registration" method="post" class="registration-form">
                                 <div class="form-group">
                                     <label class="sr-only" for="nickname">Nickname:</label>
-                                    <input type="text" name="nickname" placeholder="First name..." class="form-first-name form-control" id="form-first-name">
+                                    <input type="text" name="nickname" placeholder="Nick Name..." class="form-first-name form-control" id="form-first-name">
                                 </div>
                                 {{!--
                                 <div class="form-group">

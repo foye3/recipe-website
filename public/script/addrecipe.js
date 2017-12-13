@@ -10,11 +10,24 @@ function addInputs(divname) {
         switch (divname) {
             case "ingredientsdiv":
                 html = 
-                `<div id = '${ingredientCounter}'><label>ingredient: </label><input type='text' name='ingredients[]'/><label> ammount: </label><input type='text' name='amounts[]' /></div>`;
+                `<div class = "form-group">
+                    <div  class="col-sm-5">
+                        <input type="text" name="ingredient[]" placeholder="ingredient${ingredientCounter+1}" class="form-email form-control" id="#">
+                    </div>
+            
+                    <div class="col-sm-5">
+                        <input type="text" name="amounts[]" placeholder="amount" class="form-email form-control" id="#">
+                    </div>
+                </div>`;
                 ingredientCounter++;
                 break;
             case "stepsdiv":
-                html = `<div id = '${stepCounter}'><label> steps: </label><textarea name='steps[]'></textarea>`;
+                html = `<div class = "form-group">
+                <label class="sr-only" for="steps[]">steps</label>
+                <div class="col-sm-10">
+                    <input type="text" name="steps[]" placeholder=" step${stepCounter+1} " class="form-email form-control" id="#">
+                </div>
+                </div>`;
                 stepCounter++;
                 break;
         }

@@ -1,6 +1,16 @@
-<!-- Nav -->
+
+        <!-- Nav -->
 <nav class="navbar navbar-inverse" role="navigation">
     <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-navbar-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index">Nedy - Bootstrap Newsletter Sign-Up Landing Page</a>
+        </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="top-navbar-1">
             {{#if obj.islogin}}
@@ -20,7 +30,6 @@
         </div>
     </div>
 </nav>
-<div>
 
 <!-- Search content -->
 <div class="top-content">
@@ -34,7 +43,7 @@
 
         <div class="row">
             <div class="col-sm-12 subscribe wow fadeInUp">
-                <form class="form-inline" role="form" action="/recipe/search" method="post">
+                <form class="form-inline" role="form" action="recipe/search" method="post">
                     <div class="form-group">
                         <label class="sr-only" for="subscribe-email">Email address</label>
                         <input type="text" name="search" placeholder="Enter Search Content..." class="subscribe-email form-control" id="subscribe-email">
@@ -60,8 +69,7 @@
                         
                         <img class="card-img-top img-fluid" src="../public/img/recipes/iphone-x.jpg" alt="iphone" />
                         <div class = "card-body">
-                            <a href="/recipe/id/{{_id}}" class="card-title">{{title}}</a>
-                            {{!-- <p class="card-text">{{title}}</p> --}}
+                            <a href= "/recipe/id/{{_id}}"><h3 class="card-title">{{title}}</h3>
                             <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#myModal01" >Details</a>
                         </div>
 
@@ -79,9 +87,9 @@
                                             
                                             {{#each ingredients}}
                                                 ingredient:
-                                                {{this.name}}
+                                                {{name}}
                                                 amount:
-                                                {{this.amount}}
+                                                {{amount}}
                                             {{/each}}
                                             
                                             steps:
@@ -101,84 +109,7 @@
                 </div>
 
                 {{/each}}
-                <!--
-                <div class="col-sm-12 col-md-6 col-lg-4">
-
-                    <div class="card" id="iwatch">
-
-                        
-                        <img class="card-img-top img-fluid" src="../public/img/recipes/iwatch.jpg" alt="alienware" />
-                        <div class = "card-body">
-                            <h3 class="card-title">Apple watch</h3>
-                            <p class="card-text">Apple watch x is good</p>
-                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#myModal02">
-                                Details
-                            </a>
-                        </div>
-                        <div class="modal fade" id="myModal02" tabindex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title" id="exampleModal02">Apple watch</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            &times;
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p class="card-text">
-                                                Apple Watch Series 3 (GPS) requires an iPhone 5s or later with iOS 11 or later. 
-                                                Apple Watch Series 3 (GPS + Cellular) requires an iPhone 6 or later with iOS 11 or later. 
-                                                Apple Watch and iPhone service provider must be the same. Cellular is not available with all service providers. 
-                                                Not all service providers support enterprise accounts. Check with your employer and service provider. 
-                                                Roaming is not available outside your carrier network coverage area. 
-                                                Wireless service plan required for cellular service. Contact your service provider for more details.
-                                        </p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <div class="card" id="Apple-tv">
-                        
-                        <img class="card-img-top img-fluid" src="../public/img/recipes/Apple-tv.jpg" alt="Pikachu" />
-                        <div class = "card-body">
-                            <h3 class="card-title">Apple-tv</h3>
-                            <p class="card-text">Apple watch x is good</p>
-                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#myModal03">
-                                Details
-                            </a>
-                        </div>
-                        <div class="modal fade" id="myModal03" tabindex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title" id="exampleModal03">Apple-tv</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            &times;
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p class="card-text">
-                                                Apple TV 4K makes your favorite TV shows and movies even more amazing. 
-                                                Videos play in stunning detail with picture quality that’s more true to life. 
-                                                Enjoy content from iTunes and apps like Netflix, Hulu, and ESPN — or use the Siri Remote to find just what you want.3 Apple TV 4K features faster performance than ever with the A10X Fusion chip for all your games and apps.
-                                        </p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    -->
+                
                 </div>
         </div>
 </div>
