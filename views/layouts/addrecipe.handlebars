@@ -1,9 +1,9 @@
 <div class="row">
-
+                
     <div class="col-sm-3">
     </div>
     <div class="col-sm-6">
-
+                
         <div class="form-box ">
             <div class="form-top">
                 <div class="form-top-left">
@@ -15,69 +15,70 @@
             </div>
             <div class="form-bottom ">
                 <form role="form" action="/recipe/add" method="post" class="registration-form" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label class="sr-only" for="title">TITLE:</label>
-                        <input type="text" name="title" placeholder="Recipe title" class="form-first-name form-control" id="form-first-name" required>
+                    <div class="form-group row col-sm-12">
+                        {{!-- <div class="col-sm-10"> --}}
+                            <label class="sr-only" for="title">TITLE:</label>
+                            <input type="text" name="title" placeholder="Recipe title" class="form-first-name form-control" id="form-first-name">
+
+                        {{!-- </div> --}}
                     </div>
-                    {{!--
-                    <div class="form-group">
-                        <label class="sr-only" for="form-last-name">Last name</label>
-                        <input type="text" name="form-last-name" placeholder="Last name..." class="form-last-name form-control" id="form-last-name">
-                    </div> --}}
                     <div class="form-group row" id="ingredientsdiv">
                         <label class="sr-only" for="ingredient[]">Ingredient</label>
                         <div class="col-sm-5">
-                            <input type="text" name="ingredients[]" placeholder="Ingredient" class="form-email form-control" id="#" required>
+                            <input type="text" name="ingredients[]" placeholder="Ingredient" class="form-email form-control" id="#">
                         </div>
-
-                        <div class="col-sm-5">
-                            <input type="text" name="amounts[]" placeholder="amount" class="form-email form-control" id="#" required>
+                        
+                        <div class="col-sm-4">
+                            <input type="text" name="amounts[]" placeholder="amount" class="form-email form-control" id="#">
                         </div>
-                        <div class="col-sm-2">
-                            <button value="Add" onClick="addInputs('ingredientsdiv');">
-                                <button value="Del" onClick="removeInputs('ingredientsdiv');">
-                        </div>
+                        <div class="col-sm-1">
+                            <button  value="Add"  class = "smallbutton" onClick="addInputs('ingredientsdiv');">+</button>
+                            </div>
+                            <div>
+                            <button  value="Del"  class = "mulbutton" onClick="removeInputs('ingredientsdiv');">-</button>
+                        </div>         
                     </div>
 
 
                     <div class="form-group row" id="stepsdiv">
                         <label class="sr-only" for="steps[]">steps</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="steps[]" placeholder="step1" class="form-email form-control" id="#" required>
+                        <div class="col-sm-9">
+                            <input type="text" name="steps[]" placeholder="step1" class="form-email form-control" id="#">
                         </div>
-
-
-                        <div class="col-sm-2">
-                            <button value="Add" onClick="addInputs('stepsdiv');">
-                                <button value="Del" onClick="removeInputs('stepsdiv');">
+                        
+                
+                        <div class="col-sm-1">
+                            <button  value="Add" class = "smallbutton" onClick="addInputs('stepsdiv');">+</button>
                         </div>
+                        <div class = "btncol1">
+                            <button  value="Del"  class = "mulbutton" onClick="removeInputs('stepsdiv');">-</button>
+                        </div>         
                     </div>
-                    <div class="form-group">
-                        <label class="sr-only" for="title">Image:</label>
-                        {{!-- <input type="text" name="title" placeholder="Recipe title" class="form-first-name form-control" id="form-first-name"> --}}
-                        <input  type="file" name="recipeImage"  class="form-email form-control" id="#" value = "add an image">
-                    </div>
-                    {{!--
-                    <div class="form-group">
+                    {{!-- <div class="form-group">
                         <label class="sr-only" for="form-about-yourself">About yourself</label>
-                        <textarea name="form-about-yourself" placeholder="About yourself..." class="form-about-yourself form-control" id="form-about-yourself"></textarea>
+                        <textarea name="form-about-yourself" placeholder="About yourself..." 
+                                    class="form-about-yourself form-control" id="form-about-yourself"></textarea>
                     </div> --}}
+                    <div class="form-group row col-sm-10">
+                        <input  type="file" name="recipeImage"  class="form-email form-control" id="#" value="upload a new image">
+                    </div>
                     <button type="submit" class="btn">Confirm Add Recipe!</button>
                 </form>
             </div>
         </div>
-
+        
     </div>
-
+    
     <div class="col-sm-3">
     </div>
-
-
+        
+    
 </div>
 
 
-<script src="/public/script/addrecipe.js" language="Javascript" type="text/javascript"></script> {{!--
-<form action="/recipe/add" method="post">
+<script src="/public/script/addrecipe.js" language="Javascript" type="text/javascript"></script>
+
+{{!-- <form action="/recipe/add" method="post">
     <div>
         <label>Tittle:</label>
         <input type="text" name="title" />

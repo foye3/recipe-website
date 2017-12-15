@@ -52,7 +52,7 @@
 
         <div class="row">
             <div class="col-sm-12 subscribe wow fadeInUp">
-                <form class="form-inline" role="form" action="recipe/search" method="post">
+                <form class="form-inline" role="form" action="/recipe/search" method="post">
                     <div class="form-group">
                         <label class="sr-only" for="subscribe-email">Email address</label>
                         <input type="text" name="search" placeholder="Enter Search Content..." class="subscribe-email form-control" id="subscribe-email">
@@ -84,14 +84,14 @@
                     <div class="card-body">
                         <a href="/recipe/id/{{_id}}">
                             <h3 class="card-title">{{title}}</h3>
-                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#myModal01">Details</a>
+                            <a href="#" class="card-btn" data-toggle="modal" data-target="#myModal01">Details</a>
                     </div>
 
                     <div class="modal fade" id="myModal01" tabindex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title" id="exampleModal01">iPhone X</h4>
+                                    <h4 class="modal-title" id="exampleModal01">{{title}}</h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         &times;
                                     </button>

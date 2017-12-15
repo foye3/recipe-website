@@ -15,7 +15,7 @@ function addInputs(divname) {
                         <input type="text" name="ingredient[]" placeholder="ingredient${ingredientCounter+1}" class="form-email form-control" id="#" required>
                     </div>
             
-                    <div class="col-sm-5">
+                    <div class="col-sm-4">
                         <input type="text" name="amounts[]" placeholder="amount" class="form-email form-control" id="#" required>
                     </div>
                 </div>`;
@@ -24,7 +24,7 @@ function addInputs(divname) {
             case "stepsdiv":
                 html = `<div class = "form-group">
                 <label class="sr-only" for="steps[]">steps</label>
-                <div class="col-sm-10">
+                <div class="col-sm-9">
                     <input type="text" name="steps[]" placeholder=" step${stepCounter+1} " class="form-email form-control" id="#">
                 </div>
                 </div>`;

@@ -1,34 +1,79 @@
-<h1>Edit Recipe</h1>
+<div class="row">
+                
+    <div class="col-sm-3">
+    </div>
+    <div class="col-sm-6">
+                
+        <div class="form-box ">
+            <div class="form-top">
+                <div class="form-top-left">
+                    <h3>Edit Recipe</h3>
+                </div>
+                <div class="form-top-right">
+                    <i class="fa fa-pencil"></i>
+                </div>
+            </div>
+            <div class="form-bottom ">
+                <form role = "form" class="registration-form" action="/recipe/edit/{{originalRecipe._id}}" method="post" enctype="multipart/form-data">
+                    <label>Title:</label>
+                    <div class="form-group row">
+                        <div class = "col-sm-9">
+                            <input placeholder="Recipe title" class="form-first-name form-control" type="text" name="title" value="{{originalRecipe.title}}"/>
+                        </div>
+                        
+                    </div>
+                    <label>Ingredient and Amount</label>
+                    <div class="form-group row" id = "ingredientsdiv">
+                    {{#each originalRecipe.ingredients}}
+                        <div>
+                            <div class="col-sm-5">
+                                <input placeholder="Ingredient" class="form-email form-control" type="text" name="ingredients[]" value="{{this.name}}"/>
+                            </div>
+                            <div class="col-sm-4">
+                                <input placeholder="amount" class="form-email form-control" type="text" name="amounts[]" value="{{this.amount}}"/>
+                            </div>
+                        </div>
+                    {{/each}}
+                         <div class="col-sm-1">
+                            <button  value="Add"  onClick="addInputs('ingredientsdiv');" class = "smallbutton">+</button>
+                         </div>
+                         <div class = "btncol1">
+                            <button  value="Del"  onClick="removeInputs('ingredientsdiv');" class = "mulbutton">-</button>
+                        </div> 
+                    </div>      
+                    {{!-- <input type="button" value="Add another text input" onClick="addInputs('ingredientsdiv');"> --}}
+                    <label>steps:</label>
+                    <div class="form-group row" id = "stepsdiv">
+                        {{#each originalRecipe.steps}}
+                        <div class="col-sm-9">
+                            <input type ="text" placeholder="step1" class="form-first-name form-control "name="steps[]" value = "{{this}}">
+                        </div>
+                        {{/each}}
+                        <div class="col-sm-1">
+                            <button  value="Add"  onClick="addInputs('stepsdiv');" class = "smallbutton">+</button>
+                        </div>
+                        <div class = "btncol1">
+                            <button  value="Del"  onClick="removeInputs('stepsdiv');" class = "mulbutton">-</button>
+                        </div>
+                    </div>
+                    <div class="form-group row col-sm-10">
+                        <input  type="file" name="recipeImage"  class="form-email form-control" id="#" value="upload a new image">
+                    </div>
+                    <button type="submit" class="btn">Confirm Add Recipe!</button>
+                    {{!-- <input type="button" value="Add another text input" onClick="addInputs('stepsdiv');"> --}}
+                </form>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="col-sm-3">
+    </div>
+        
+    
+</div>
+
 <script src="/public/script/addrecipe.js" language="Javascript" type="text/javascript"></script>
 
-<form action="/recipe/edit/{{originalRecipe._id}}" method="post" enctype="multipart/form-data">
-    <div>
-        <label>Tittle:</label>
-        <input type="text" name="title" value="{{originalRecipe.title}}"/>
-    </div>
 
-    <div id = "ingredientsdiv">
-    {{#each originalRecipe.ingredients}}
-        <label>ingredient:</label>
-        <input type="text" name="ingredients[]" value="{{this.name}}"/>
-        <label>ammount:</label>
-        <input type="text" name="amounts[]" value="{{this.amount}}"/>
-        <br>
-    {{/each}}
-    </div>
-    <input type="button" value="Add another text input" onClick="addInputs('ingredientsdiv');">
-    <div id = "stepsdiv">
-        {{#each originalRecipe.steps}}
-        <label>steps:</label>
-        <textarea name="steps[]"/>{{this}}</textarea>
-        <br>
-        {{/each}}
-    </div>
-    <div>
-        <input  type="file" name="recipeImage"  class="form-email form-control" id="#" value="upload a new image">
-    </div>
-    <input type="button" value="Add another text input" onClick="addInputs('stepsdiv');">
-    <div>
-        <input type="submit" value="submit" />
-    </div>
-</form>
+

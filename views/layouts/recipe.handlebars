@@ -1,67 +1,150 @@
-<h1>recipe</h1>
+<div class="inner-bg">
+    <div class="container">
 
-{{#if isAuthor}}
-<a href="/recipe/edit/{{recipe._id}}">Edit</a>
-<a onclick = "javascript:return confirm('comfirm')" href="/recipe/delete/{{recipe._id}}">delete</a>
-{{/if}}
+        <div class="row">
 
-<p>tittle: {{recipe.title}}</p>
-<p>rating: {{#if avgRate}}
-    {{avgRate}}
-    {{else}}
-    No rating
-    {{/if}}</p>
-<p>Author:{{user.nick_name}}</p>
-{{#if imagePath}}
-{{!-- <img class="media-object" src="../..{{imagePath}}" alt="Figure"> --}}
-    {{!-- <img class="wow fadeInUp animated" data-wow-delay=".5s" src="../..{{imagePath}}" alt="blog image" /> --}}
-    <img class="wow fadeInUp animated" data-wow-delay=".5s" src="../..{{imagePath}}" alt="blog image" />
+            <div class="col-sm-1"></div>
+            <div class="col-sm-10">
 
-{{/if}}
-<h3>ingredients</h3>
-<p>
-    {{#each recipe.ingredients}}
-    <li>{{this.name}},{{this.amount}}</li>
-    {{/each}}
-</p>
-<h3>steps:</h3>
-<p>
-    {{#each recipe.steps}}
-    <li>{{this}}</li>
-    {{/each}}
-</p>
+                <div class="form-box">
+                    <div class="form-top">
+                        <div class="form-top-left">
+                            <h3>{{recipe.title}}</h3>
+                            <a href="/user/profile">Post By
+                                <strong>{{user.nick_name}}</strong>
+                            </a>
+                            <hr>
+                            <h3>Rating:</h3>
+                            <p>
+                                {{#if avgRate}} {{avgRate}} {{else}} No rating {{/if}}
+                            </p>
+                        </div>
+                        <div class="form-top-right">
+                            {{#if isAuthor}}
+                            <button class="btn" onclick="location.href='/recipe/edit/{{recipe._id}}'">Edit</button>
+                            <button class="btn" onclick="location.href='/recipe/delete/{{recipe._id}}'">Delete</button>
 
-{{#if isFollowed}}
-<a href="/recipe/unfollow/{{recipe._id}}">unfollow</a>
-{{else}}
-<a href="/recipe/follow/{{recipe._id}}">follow</a>
-{{/if}} 
-{{#if isRated}} 
-    <p> you have already rated</p>
-{{else}}
-<form role="form" action="/recipe/rating/{{recipe._id}}" method="post" class="registration-form">
-    <select name="rate">
-        <option value="5">5</option>
-        <option value="4">4</option>
-        <option value="3">3</option>
-        <option value="2">2</option>
-        <option value="1">1</option>
-    </select>
-    <button type="submit" class="btn">rating</button>
-</form>
-{{/if}}
-<h3>comments:</h3>
-<p>
-    {{#unless recipe.comments}}
-    <p>There has no comment.</p>
-    {{/unless}} {{#each recipe.comments}}
-    <li>{{this.poster}},{{this.comment}}</li>
-    {{/each}}
-</p>
-<h3>Make a comment:</h3>
-<form role="form" action="/recipe/comment/{{recipe._id}}" method="post" class="registration-form">
-    <div class="form-group">
-        <textarea name="comment" placeholder="Input your comment" class="form-first-name form-control" id="form-first-name"></textarea>
+                            {{/if}} {{#if isFollowed}}
+                            <buttton class="btn" style="font-size: 24px; color: rgb(239, 243, 240);" onclick="location.href='/recipe/unfollow/{{recipe._id}}'">Unfollow</buttton>
+                            {{else}}
+                            <buttton class="btn" style="font-size: 24px; color: rgb(239, 243, 240);" onclick="location.href='/recipe/follow/{{recipe._id}}'">Follow</buttton>
+                            {{/if}}
+                        </div>
+
+                    </div>
+                    <div class="form-bottom1 recipelist">
+                        {{#if imagePath}}
+                        <img class="wow fadeInUp animated" data-wow-delay=".5s" src="../..{{imagePath}}" alt="blog image" /> {{/if}}
+                        <h3>Ingredients:</h3>
+                        <p>
+                            {{#each recipe.ingredients}}
+                            <li>{{this.name}} amount:{{this.amount}}</li>
+                            {{/each}}
+                        </p>
+                        <h3>Steps:</h3>
+                        <p>
+                            {{#each recipe.steps}}
+                            <li>{{this}}</li>
+                            {{/each}}
+                        </p>
+
+
+                        {{#if isRated}}
+                        <h4> You have already rated</h4>
+                        {{else}}
+
+                        <form role="form" action="/recipe/rating/{{recipe._id}}" method="post" class="registration-form">
+
+                            <div class="page-header">
+                                <h3>Rating</h3>
+                            </div>
+
+                            <input id="input-21d" type="number" name="rate" class="rating" min=0 max=5 step=1 data-size="sm">
+                            <button type="submit" class="btn">rating</button>
+                        </form>
+
+                        {{/if}}
+
+
+                        <h3>Comments:</h3>
+                        <p>
+                            {{#unless recipe.comments}}
+                            <p>There has no comment.</p>
+                            {{/unless}} {{#each recipe.comments}}
+                            <li>{{this.poster}},{{this.comment}}</li>
+                            {{/each}}
+                        </p>
+                        <h3>Make a comment:</h3>
+                        <form role="form" action="/recipe/comment/{{recipe._id}}" method="post" class="login-form">
+                            <div class="form-group">
+                                <textarea name="comment" style="resize:none;width:600px;height:200px;" placeholder="Input your comment" class="form-first-name form-control textarea-scrollbar scrollbar-outer"
+                                    id="form-first-name"></textarea>
+                            </div>
+                            <button type="submit" class="btn">Submit</button>
+                        </form>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+        </div>
     </div>
-    <button type="submit" class="btn">Submit</button>
-</form>
+</div>
+
+<script>
+    jQuery(document).ready(function () {
+        $("#input-21f").rating({
+            starCaptions: function (val) {
+                if (val < 3) {
+                    return val;
+                } else {
+                    return 'high';
+                }
+            },
+            starCaptionClasses: function (val) {
+                if (val < 3) {
+                    return 'label label-danger';
+                } else {
+                    return 'label label-success';
+                }
+            },
+            hoverOnClear: false
+        });
+
+        $('#rating-input').rating({
+            min: 0,
+            max: 5,
+            step: 1,
+            size: 'lg',
+            showClear: false
+        });
+
+        $('#btn-rating-input').on('click', function () {
+            $('#rating-input').rating('refresh', {
+                showClear: true,
+                disabled: !$('#rating-input').attr('disabled')
+            });
+        });
+
+
+        $('.btn-danger').on('click', function () {
+            $("#kartik").rating('destroy');
+        });
+
+        $('.btn-success').on('click', function () {
+            $("#kartik").rating('create');
+        });
+
+        $('#rating-input').on('rating.change', function () {
+            alert($('#rating-input').val());
+        });
+
+
+        $('.rb-rating').rating({ 'showCaption': true, 'stars': '3', 'min': '0', 'max': '3', 'step': '1', 'size': 'xs', 'starCaptions': { 0: 'status:nix', 1: 'status:wackelt', 2: 'status:geht', 3: 'status:laeuft' } });
+    });
+</script>
