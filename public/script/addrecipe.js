@@ -12,11 +12,11 @@ function addInputs(divname) {
                 html = 
                 `<div class = "form-group">
                     <div  class="col-sm-5">
-                        <input type="text" name="ingredient[]" placeholder="ingredient${ingredientCounter+1}" class="form-email form-control" id="#">
+                        <input type="text" name="ingredient[]" placeholder="ingredient${ingredientCounter+1}" class="form-email form-control" id="#" required>
                     </div>
             
                     <div class="col-sm-5">
-                        <input type="text" name="amounts[]" placeholder="amount" class="form-email form-control" id="#">
+                        <input type="text" name="amounts[]" placeholder="amount" class="form-email form-control" id="#" required>
                     </div>
                 </div>`;
                 ingredientCounter++;

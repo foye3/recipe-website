@@ -1,6 +1,7 @@
 const data = require("../data");
 const userData = data.users;
 const recipeData = data.recipes;
+const imageData = data.images;
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
@@ -9,40 +10,54 @@ const LocalStrategy = require("passport-local").Strategy;
 const path = require("path");
 let notFound = path.resolve("./static/404.html");
 const xss = require("xss");
+const fs = require('fs');
+const multer = require('multer');
+const uuid = require("node-uuid");
+
+
 
 // get recipe by id
 router.get("/id/:id", async (req, res) => {
-    let author = false;
-    let followed = false;
-    let rated = false;
-    let recipeid = req.params.id;
-    
-    if (req.isAuthenticated()) {
-        let userid = req.user._id;
-        author = await isAuthor(userid, recipeid);
-        followed = await userData.isFollowed(userid, recipeid);
-        rated = await recipeData.isRated(userid, recipeid);
-    }
-
-    //let avgRate = await recipeData.getRate(req.params.id);
-    console.log("is followed:" + followed);
-    let recipe = await recipeData.getRecipeById(recipeid);
-    let user = await userData.getUserById(recipe.user_id);
-
-    let avgRate;
-    if (recipe.rates) {
-        let sum = 0;
-        for (i = 0; i < recipe.rates.length; i++) {
-            sum += parseInt(recipe.rates[i].rate);
+    try {
+        
+        let author = false;
+        let followed = false;
+        let rated = false;
+        let recipeid = req.params.id;
+        
+        if (req.isAuthenticated()) {
+            let userid = req.user._id;
+            author = await isAuthor(userid, recipeid);
+            followed = await userData.isFollowed(userid, recipeid);
+            rated = await recipeData.isRated(userid, recipeid);
         }
-        console.log("average rate:" + sum, recipe.rates.length)
-        avgRate = (sum / recipe.rates.length).toFixed(2);
+        
+        //let avgRate = await recipeData.getRate(req.params.id);
+        console.log("is followed:" + followed);
+        let recipe = await recipeData.getRecipeById(recipeid);
+        let user = await userData.getUserById(recipe.user_id);
+        let image = await imageData.getImageByRecipeId(recipeid);
+        let imagePath;
+        if(image){
+            imagePath = image.path;
+        }
+        let avgRate;
+        if (recipe.rates) {
+            let sum = 0;
+            for (i = 0; i < recipe.rates.length; i++) {
+                sum += parseInt(recipe.rates[i].rate);
+            }
+            console.log("average rate:" + sum, recipe.rates.length)
+            avgRate = (sum / recipe.rates.length).toFixed(2);
+        }
+        
+        res.render("layouts/recipe", {
+            recipe: recipe, user: user, isAuthor: author,imagePath :imagePath,
+            isFollowed: followed, isRated: rated, avgRate: avgRate
+        });
+    } catch (error) {
+        res.sendfile(notFound);
     }
-
-    res.render("layouts/recipe", {
-        recipe: recipe, user: user, isAuthor: author,
-        isFollowed: followed, isRated: rated, avgRate: avgRate
-    });
 });
 
 // get all recipes
@@ -70,6 +85,7 @@ router.post("/search", async (req, res) => {
             recipelist = await recipeData.getRecipesByIngredient(search);
         }
         obj.recipelist = recipelist;
+
         //console.log(recipelist);
         res.render("layouts/index", { obj: obj });
     } catch (error) {
@@ -83,14 +99,40 @@ router.get("/add", isLogedIn, async (req, res) => {
     res.render("layouts/addrecipe");
 });
 
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '/..', '/public/img/recipes')); // get the right path!
+    },
+    filename: function (req, file, cb) {
+        let idx = file.mimetype.indexOf('/')
+        let type = file.mimetype.substring(idx + 1);
+        type = type.toLowerCase();
+
+        cb(null, uuid.v1() + '.' + type);
+    }
+})
+
+function fileFilter(req, file, cb) {
+    var type = file.mimetype;
+    var typeArray = type.split("/");
+    if (typeArray[0] == "video" || typeArray[0] == "image") {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+}
+
+var upload = multer({storage: storage, dest: "public/uploads",fileFilter: fileFilter});
+// let upload = multer({dest:'./public/img/recipes'});
+
 // submit add recipe form
-router.post("/add", isLogedIn, async (req, res) => {
+router.post("/add", isLogedIn, upload.single('recipeImage'),async (req, res) => {
     try {
         console.log("add recipe:" + req.body.title);
-        //console.log(req.body.title);
+        console.log(req);
         let title = xss(req.body.title);
         //console.log(title);
-        let id = req.user._id;
+        let userid = req.user._id;
 
         let ingredientNames = xss(req.body.ingredients);
         let amounts = xss(req.body.amounts);
@@ -106,9 +148,14 @@ router.post("/add", isLogedIn, async (req, res) => {
         }
         let steps = xss(req.body.steps);
         let stepArr = steps.split(',');
-
         //console.log(ingredients);
-        let addrecipe = await recipeData.addRecipe(title, id, ingredients, stepArr);
+
+        let recipeId = uuid.v4();
+        let addrecipe = await recipeData.addRecipe(recipeId,title, userid, ingredients, stepArr);
+        if(req.file){
+            let imagePath = '/public/img/recipes/'+req.file.filename;
+            let addImage = await imageData.addImage(imagePath,recipeId);
+        }
         res.redirect(`/user/profile`);
     } catch (error) {
         console.log(error);
@@ -120,7 +167,7 @@ router.post("/add", isLogedIn, async (req, res) => {
 });
 
 // go to recipe edit page
-router.get("/edit/:id", isLogedIn, async (req, res) => {
+router.get("/edit/:id", isLogedIn,  async (req, res) => {
     try {
         if (!isAuthor(req.user._id, req.params.id)) {    // if not author
             res.redirect(`/recipe/id/${req.params.id}`);
@@ -136,10 +183,12 @@ router.get("/edit/:id", isLogedIn, async (req, res) => {
 });
 
 // submit recipe update
-router.post("/edit/:id", isLogedIn, async (req, res) => {
+router.post("/edit/:id", isLogedIn, upload.single('recipeImage'), async (req, res) => {
+    try{
     if (!isAuthor(req.user._id, req.params.id)) {    // if not author
         res.redirect(`/recipe/id/${req.params.id}`);
     }
+    console.log(req);
     let recipeid = req.params.id;
     // let ingredientNames = xss(req.body.ingredients);
     // let amounts = xss(req.body.amounts);
@@ -172,7 +221,18 @@ router.post("/edit/:id", isLogedIn, async (req, res) => {
     updaterecipe.steps = stepArr;
     //console.log(ingredients);
     let addrecipe = await recipeData.updateRecipe(recipeid, updaterecipe);
+    if(req.file){
+        let imagePath = '/public/img/recipes/'+req.file.filename;
+        let updatedImage ={
+            path: imagePath
+        };
+        let updateImage = await imageData.updateImage(recipeid,updatedImage);
+    }
+
     res.redirect(`/recipe/id/${req.params.id}`);
+    }catch(error){
+        console.log(error);
+    }
 });
 
 // delete recipe

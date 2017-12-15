@@ -12,6 +12,12 @@
     No rating
     {{/if}}</p>
 <p>Author:{{user.nick_name}}</p>
+{{#if imagePath}}
+{{!-- <img class="media-object" src="../..{{imagePath}}" alt="Figure"> --}}
+    {{!-- <img class="wow fadeInUp animated" data-wow-delay=".5s" src="../..{{imagePath}}" alt="blog image" /> --}}
+    <img class="wow fadeInUp animated" data-wow-delay=".5s" src="../..{{imagePath}}" alt="blog image" />
+
+{{/if}}
 <h3>ingredients</h3>
 <p>
     {{#each recipe.ingredients}}

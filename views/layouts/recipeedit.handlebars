@@ -1,11 +1,12 @@
 <h1>Edit Recipe</h1>
 <script src="/public/script/addrecipe.js" language="Javascript" type="text/javascript"></script>
 
-<form action="/recipe/edit/{{originalRecipe._id}}" method="post">
+<form action="/recipe/edit/{{originalRecipe._id}}" method="post" enctype="multipart/form-data">
     <div>
         <label>Tittle:</label>
         <input type="text" name="title" value="{{originalRecipe.title}}"/>
     </div>
+
     <div id = "ingredientsdiv">
     {{#each originalRecipe.ingredients}}
         <label>ingredient:</label>
@@ -22,6 +23,9 @@
         <textarea name="steps[]"/>{{this}}</textarea>
         <br>
         {{/each}}
+    </div>
+    <div>
+        <input  type="file" name="recipeImage"  class="form-email form-control" id="#" value="upload a new image">
     </div>
     <input type="button" value="Add another text input" onClick="addInputs('stepsdiv');">
     <div>

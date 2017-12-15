@@ -1,5 +1,4 @@
-
-        <!-- Nav -->
+<!-- Nav -->
 <nav class="navbar navbar-inverse" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -14,19 +13,29 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="top-navbar-1">
             {{#if obj.islogin}}
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a>Hi {{obj.nickname}} </a></li>
-                    <li><a href='/user/profile'>my profile</a></li>
-                    <li><a href='/user/logout'>logout</a></li>
-                    
-                </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a>Hi {{obj.nickname}} </a>
+                </li>
+                <li>
+                    <a href='/user/profile'>my profile</a>
+                </li>
+                <li>
+                    <a href='/user/logout'>logout</a>
+                </li>
+
+            </ul>
             {{else}}
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href='/user/login'>login</a></li>
-                    <li><a href='/user/registration'>registration</a></li>  
-                </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href='/user/login'>login</a>
+                </li>
+                <li>
+                    <a href='/user/registration'>registration</a>
+                </li>
+            </ul>
             {{/if}}
-            
+
         </div>
     </div>
 </nav>
@@ -34,7 +43,7 @@
 <!-- Search content -->
 <div class="top-content">
     <div class="container">
-    
+
         <div class="row">
             <div class="col-sm-8 col-sm-offset-2 text">
                 <h1 class="wow fadeInLeftBig">Search Recipes you want to cook!!</h1>
@@ -48,68 +57,63 @@
                         <label class="sr-only" for="subscribe-email">Email address</label>
                         <input type="text" name="search" placeholder="Enter Search Content..." class="subscribe-email form-control" id="subscribe-email">
                     </div>
-                    <button type="submit" class="btn">Search <i class="fa fa-angle-right"></i></button>
+                    <button type="submit" class="btn">Search
+                        <i class="fa fa-angle-right"></i>
+                    </button>
                 </form>
                 <div class="success-message"></div>
                 <div class="error-message"></div>
             </div>
         </div>
-        
+
     </div>
 </div>
 
 <!-- Content of Recipes -->
-    <div class="col-md-12">
-        <div class="container">
-            <div class="row">
+<div class="col-md-12">
+    <div class="container">
+        <div class="row">
 
-                {{#each obj.recipelist}}
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <div class="card" id="iPhone X">
-                        
-                        <img class="card-img-top img-fluid" src="../public/img/recipes/iphone-x.jpg" alt="iphone" />
-                        <div class = "card-body">
-                            <a href= "/recipe/id/{{_id}}"><h3 class="card-title">{{title}}</h3>
-                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#myModal01" >Details</a>
-                        </div>
+            {{#each obj.recipelist}}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card" id="iPhone X">
 
-                        <div class="modal fade" id="myModal01" tabindex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title" id="exampleModal01">iPhone X</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            &times;
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p class="card-text">
-                                            
-                                            {{#each ingredients}}
-                                                ingredient:
-                                                {{name}}
-                                                amount:
-                                                {{amount}}
-                                            {{/each}}
-                                            
-                                            steps:
-                                            {{#each steps}}
-                                                {{this}}
-                                            {{/each}}
+                    <img class="card-img-top img-fluid" src="..{{imagePath}}" alt="iphone" /> 
 
-                                        </p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
+
+                    <div class="card-body">
+                        <a href="/recipe/id/{{_id}}">
+                            <h3 class="card-title">{{title}}</h3>
+                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#myModal01">Details</a>
+                    </div>
+
+                    <div class="modal fade" id="myModal01" tabindex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="exampleModal01">iPhone X</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        &times;
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="card-text">
+
+                                        {{#each ingredients}} ingredient: {{name}} amount: {{amount}} {{/each}} steps: {{#each steps}} {{this}} {{/each}}
+
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {{/each}}
-                
-                </div>
+            {{/each}}
+
         </div>
+    </div>
 </div>

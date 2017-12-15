@@ -1,5 +1,6 @@
 const mongoCollections = require("../config/mongoCollections");
 const recipes = mongoCollections.recipes;
+const imagesData = require("./images");
 const uuid = require("node-uuid");
 
 //recipe data structure 
@@ -79,6 +80,16 @@ module.exports = {
         if (!userid) throw "must provide a user id";
         const recipesCollection = await recipes();
         const recipelist = await recipesCollection.find({ user_id: userid }).toArray();
+        if(recipelist){
+            for (let i = 0; i < recipelist.length; i++) {
+                let image = await imagesData.getImageByRecipeId(recipelist[i]._id);
+                if (image) {
+                    recipelist[i].imagePath = image.path;
+                } else {
+                    recipelist[i].imagePath = "/public/img/recipes/default.jpg";
+                }
+            }
+        }
         return recipelist;
 
     },
@@ -94,22 +105,42 @@ module.exports = {
         console.log("getRecipesByTitle:" + title);
         if (!title) throw "must provide a recipe name";
         const recipesCollection = await recipes();
-        const recipe = await recipesCollection.find({ title: { $regex: title, $options: '/' + title + '/i' } }).toArray();
-        if (!recipe) throw "Recipe not found";
-        console.log(recipe);
-        return recipe;
+        const recipelist = await recipesCollection.find({ title: { $regex: title, $options: '/' + title + '/i' } }).toArray();
+        //if (!recipe) throw "Recipe not found";
+        if (recipelist) {
+            for (let i = 0; i < recipelist.length; i++) {
+                let image = await imagesData.getImageByRecipeId(recipelist[i]._id);
+                if (image) {
+                    recipelist[i].imagePath = image.path;
+                } else {
+                    recipelist[i].imagePath = "/public/img/recipes/default.jpg";
+                }
+            }
+        }
+        console.log(recipelist);
+        return recipelist;
     },
 
     async getRecipesByIngredient(ingredient) {
         console.log("Inside getRecipesByIngredient " + ingredient);
         if (!ingredient) throw "must provide ingrdient";
         const recipesCollection = await recipes();
-        const recipe = await recipesCollection.find({ "ingredients.name": { $regex: ingredient, $options: '/' + ingredient + '/i' } }).toArray();
-        console.log(recipe);
-        return recipe;
+        const recipelist = await recipesCollection.find({ "ingredients.name": { $regex: ingredient, $options: '/' + ingredient + '/i' } }).toArray();
+        if (recipelist) {
+            for (let i = 0; i < recipelist.length; i++) {
+                let image = await imagesData.getImageByRecipeId(recipelist[i]._id);
+                if (image) {
+                    recipelist[i].imagePath = image.path;
+                } else {
+                    recipelist[i].imagePath = "/public/img/recipes/default.jpg";
+                }
+            }
+        }
+        console.log(recipelist);
+        return recipelist;
     },
 
-    async addRecipe(title, userid, ingredients, steps) {
+    async addRecipe(recipeId, title, userid, ingredients, steps) {
         if (typeof title !== "string") throw "No title provided";
         if (!userid) throw "Must provid an user id"
         if (!steps || !Array.isArray(steps))
@@ -119,7 +150,7 @@ module.exports = {
         try {
             const recipeCollection = await recipes();
             const newRecipe = {
-                _id: uuid.v4(),
+                _id: recipeId,
                 user_id: userid,
                 title: title,
                 ingredients: ingredients,
@@ -297,11 +328,12 @@ module.exports = {
         return true;
     },
 
-    async isRated(userid,recipeid){
+    async isRated(userid, recipeid) {
         if (!userid) throw "must provide user id";
         if (!recipeid) throw "must provide recipe id";
         const recipeCollection = await recipes();
-        const rate = await recipeCollection.findOne({_id: recipeid,
+        const rate = await recipeCollection.findOne({
+            _id: recipeid,
             rates: {
                 $elemMatch: {
                     user_id: userid

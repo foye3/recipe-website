@@ -1,5 +1,6 @@
 const data = require("../data");
 const userData = data.users;
+const imageData = data.images;
 const recipeData = data.recipes;
 const express = require("express");
 const router = express.Router();
@@ -89,6 +90,14 @@ router.get("/profile", isLogedIn, async (req, res) => {
                 // console.log("recipeId:");
                 // console.log(id);
                 let recipe = await recipeData.getRecipeById(id.recipe_id);
+                if(recipe){
+                    let image = await imageData.getImageByRecipeId(id.recipe_id);                    
+                    if (image) {
+                        recipe.imagePath = image.path;
+                    }else{
+                        recipe.imagePath = "/public/img/recipes/default.jpg";
+                    }
+                }
                 followedList.push(recipe);
             }
             //console.log(followedList);
