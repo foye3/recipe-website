@@ -1,6 +1,4 @@
-//This is structure of database
 [
-    // user collection
     {
         "_id": "uuid",
         "user_name": "email",
@@ -12,7 +10,6 @@
             }
         ]
     },
-    // recipe collection
     {
         "_id": "uuid",
         "cerater_id":"user_id",
@@ -27,7 +24,7 @@
             {
                 "step": "stepnumber",
                 "content": "content",
-                "imageUrl": "imageUrl"  //not necessary
+                "imageUrl": "imageUrl"
             }
         ],
         "comments": [
